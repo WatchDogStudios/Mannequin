@@ -1,0 +1,3 @@
+[submodule "Code/ThirdParty/flip"]
+    path = Code/ThirdParty/flip
+    url = https://github.com/NVlabs/flip.git

@@ -1,0 +1,9 @@
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:themelocal="clr-namespace:Syncfusion.Themes.basetheme.WPF"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:skinmanager="clr-namespace:Syncfusion.SfSkinManager;assembly=Syncfusion.SfSkinManager.WPF">
+    
+    <ResourceDictionary.MergedDictionaries>
+        <skinmanager:ResourceDictionaryProvider DictionaryName="Common" ThemeName="basetheme"/>
+        <skinmanager:ResourceDictionaryProvider DictionaryName="Brushes" ThemeName="basetheme"/>
+    </ResourceDictionary.MergedDictionaries>
+</ResourceDictionary>

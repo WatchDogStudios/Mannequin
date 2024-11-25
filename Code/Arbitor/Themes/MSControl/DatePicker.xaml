@@ -1,0 +1,228 @@
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"  
+                    xmlns:themelocal="clr-namespace:Syncfusion.Themes.basetheme.WPF"
+                    xmlns:sfskin="clr-namespace:Syncfusion.SfSkinManager;assembly=Syncfusion.SfSkinManager.WPF"
+                    xmlns:sys="clr-namespace:System;assembly=mscorlib">
+
+    <ResourceDictionary.MergedDictionaries>
+        <sfskin:ResourceDictionaryProvider DictionaryName="Common" ThemeName="basetheme"/>
+        <sfskin:ResourceDictionaryProvider DictionaryName="Brushes" ThemeName="basetheme"/>
+        <ResourceDictionary Source="/Syncfusion.Themes.basetheme.WPF;component/MSControl/Calendar.xaml" />
+        <ResourceDictionary Source="/Syncfusion.Themes.basetheme.WPF;component/MSControl/GlyphButton.xaml" />
+    </ResourceDictionary.MergedDictionaries>
+
+    <Style x:Key="WPFDatepickerCalendarStyle" BasedOn="{StaticResource WPFCalendarStyle}" TargetType="{x:Type Calendar}">
+        <Setter Property="BorderThickness" Value="{StaticResource basetheme.BorderThickness}"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type Calendar}">
+                    <StackPanel x:Name="PART_Root" HorizontalAlignment="Center">
+                        <Border Effect="{StaticResource Default.ShadowDepth3}"
+                                CornerRadius="0"
+                                BorderThickness="{StaticResource basetheme.BorderThickness1}"
+                                BorderBrush="Transparent"
+                                
+                                Margin="6,0,3,6">
+                            <CalendarItem x:Name="PART_CalendarItem"
+                                      BorderBrush="{TemplateBinding BorderBrush}"
+                                      BorderThickness="{TemplateBinding BorderThickness}"
+                                      Background="{TemplateBinding Background}"
+                                      Style="{TemplateBinding CalendarItemStyle}"/>
+                        </Border>
+                    </StackPanel>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="WPFDatePickerTextBoxStyle" TargetType="{x:Type DatePickerTextBox}">
+        <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
+        <Setter Property="FontSize" Value="{StaticResource basetheme.BodyTextStyle}"/>
+        <Setter Property="FontFamily" Value="{StaticResource basetheme.ThemeFontFamily}"/>
+        <Setter Property="FontWeight" Value="{StaticResource basetheme.FontWeightNormal}"/>
+        <Setter Property="Foreground" Value="{StaticResource ContentForeground}"/>
+        <Setter Property="Background" Value="Transparent"/>
+        <Setter Property="BorderBrush" Value="Transparent"/>
+        <Setter Property="SelectionBrush" Value="{StaticResource PrimaryBackground}"/>
+        <Setter Property="ScrollViewer.PanningMode" Value="VerticalFirst"/>
+        <Setter Property="Stylus.IsFlicksEnabled" Value="False"/>
+        <Setter Property="CaretBrush" Value="{StaticResource ContentForeground}"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type DatePickerTextBox}">
+                    <Grid>
+                        <VisualStateManager.VisualStateGroups>
+                            <VisualStateGroup x:Name="CommonStates">
+                                <VisualStateGroup.Transitions>
+                                    <VisualTransition GeneratedDuration="0"/>
+                                    <VisualTransition GeneratedDuration="0:0:0.1" To="MouseOver"/>
+                                </VisualStateGroup.Transitions>
+                                <VisualState x:Name="Normal"/>
+                                <VisualState x:Name="Disabled">
+                                </VisualState>
+                                <VisualState x:Name="MouseOver">
+                                </VisualState>
+                            </VisualStateGroup>
+                            <VisualStateGroup x:Name="WatermarkStates">
+                                <VisualStateGroup.Transitions>
+                                    <VisualTransition GeneratedDuration="0"/>
+                                </VisualStateGroup.Transitions>
+                                <VisualState x:Name="Unwatermarked"/>
+                                <VisualState x:Name="Watermarked">
+                                    <Storyboard>
+                                        <DoubleAnimation Duration="0" To="0" Storyboard.TargetProperty="Opacity" Storyboard.TargetName="ContentElement"/>
+                                        <DoubleAnimation Duration="0" To="1" Storyboard.TargetProperty="Opacity" Storyboard.TargetName="PART_Watermark"/>
+                                    </Storyboard>
+                                </VisualState>
+                            </VisualStateGroup>
+                            <VisualStateGroup x:Name="FocusStates">
+                                <VisualStateGroup.Transitions>
+                                    <VisualTransition GeneratedDuration="0"/>
+                                </VisualStateGroup.Transitions>
+                                <VisualState x:Name="Unfocused"/>
+                                <VisualState x:Name="Focused">
+                                </VisualState>
+                            </VisualStateGroup>
+                        </VisualStateManager.VisualStateGroups>
+                        <Border x:Name="Border" 
+                                BorderBrush="{TemplateBinding BorderBrush}" 
+                                BorderThickness="{TemplateBinding BorderThickness}" 
+                                Background="{TemplateBinding Background}" 
+                                CornerRadius="{StaticResource basetheme.CornerRadius2}" 
+                                Opacity="1" 
+                                Padding="{TemplateBinding Padding}">
+                            <Grid x:Name="WatermarkContent" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}">
+                                <Border x:Name="ContentElement"/>
+                                <Border x:Name="watermark_decorator" Padding="{TemplateBinding Padding}">
+                                    <ContentControl x:Name="PART_Watermark" TextElement.Foreground="{StaticResource PlaceholderForeground}" TextElement.FontFamily="{StaticResource basetheme.ThemeFontFamily}" Focusable="False" IsHitTestVisible="False" Opacity="0" Padding="2"/>
+                                </Border>
+                                <ScrollViewer x:Name="PART_ContentHost" Background="Transparent" HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}" Margin="0" VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}">
+                                    <ScrollViewer.Resources>
+                                        <Style BasedOn="{x:Null}" TargetType="{x:Type TextBlock}" />
+                                    </ScrollViewer.Resources>
+                                </ScrollViewer>
+                            </Grid>
+                        </Border>
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style BasedOn="{StaticResource WPFDatePickerTextBoxStyle}" TargetType="{x:Type DatePickerTextBox}"/>
+
+    <Style x:Key="WPFDatePickerStyle" TargetType="{x:Type DatePicker}">
+        <Setter Property="IsTodayHighlighted" Value="True"/>
+        <Setter Property="CalendarStyle" Value="{StaticResource WPFDatepickerCalendarStyle}"/>
+        <Setter Property="Foreground" Value="{StaticResource ContentForeground}"/>
+        <Setter Property="SelectedDateFormat" Value="Short"/>
+        <Setter Property="Background" Value="{StaticResource ContentBackgroundAlt4}"/>
+        <Setter Property="Padding" Value="0"/>
+        <Setter Property="BorderBrush"  Value="{StaticResource Border}"/>
+        <Setter Property="BorderThickness" Value="{StaticResource basetheme.ThemeBorderThicknessVariant1}"/>
+        <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type DatePicker}">
+                    <Border x:Name="focusBorder" BorderBrush="Transparent"
+                            BorderThickness="{StaticResource basetheme.BorderThickness2}"
+                            CornerRadius="{StaticResource basetheme.CornerRadius2}">
+                        <Border x:Name="PART_Border" 
+                                BorderBrush="{TemplateBinding BorderBrush}" 
+                                BorderThickness="{TemplateBinding BorderThickness}" 
+                                CornerRadius="{StaticResource basetheme.CornerRadius2}" 
+                                Background="{TemplateBinding Background}" 
+                                Padding="{TemplateBinding Padding}"
+                                SnapsToDevicePixels="True">
+                            <VisualStateManager.VisualStateGroups>
+                                <VisualStateGroup x:Name="CommonStates">
+                                    <VisualState x:Name="Normal"/>
+                                    <VisualState x:Name="Disabled">
+                                    </VisualState>
+                                </VisualStateGroup>
+                            </VisualStateManager.VisualStateGroups>
+                            <Grid x:Name="PART_Root" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="24"/>
+                                </Grid.ColumnDefinitions>
+                                <Grid.Resources>
+                                    <Style x:Key="WPFDatePickerButtonStyle"
+                                            BasedOn="{StaticResource WPFGlyphFlatButtonStyle}"
+                                            TargetType="{x:Type Button}">
+                                        <Setter Property="Content">
+                                            <Setter.Value>
+                                                <TextBlock Text="&#xe700;" 
+                                                           Foreground="{Binding RelativeSource={RelativeSource AncestorType=Button}, Path=Foreground}"
+                                                           FontSize="14"
+                                                           FontFamily="pack://application:,,,/Syncfusion.Themes.basetheme.WPF;component/Common/FontFamily/#FluentThemeControlIcons"/>
+                                            </Setter.Value>
+                                        </Setter>
+                                    </Style>
+                                </Grid.Resources>
+                                <Button x:Name="PART_Button" Grid.Column="1" Focusable="False" HorizontalAlignment="Center" Padding="2" Style="{StaticResource WPFDatePickerButtonStyle}" Grid.Row="0" VerticalAlignment="Center">
+                                </Button>
+                                <DatePickerTextBox x:Name="PART_TextBox" Grid.Column="0" Focusable="{TemplateBinding Focusable}" FontFamily="{TemplateBinding FontFamily}" FontSize="{TemplateBinding FontSize}" FontWeight="{TemplateBinding FontWeight}" Padding="2,0,0,0" Foreground="{TemplateBinding Foreground}" VerticalAlignment="Center" HorizontalContentAlignment="Stretch" Style="{StaticResource WPFDatePickerTextBoxStyle}" Grid.Row="0" VerticalContentAlignment="Stretch">
+                                </DatePickerTextBox>
+                                <Grid x:Name="PART_DisabledVisual" Grid.ColumnSpan="2" Grid.Column="0" IsHitTestVisible="False" Opacity="0" Grid.Row="0">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Rectangle Grid.Column="0" Fill="{StaticResource BorderAlt}" RadiusY="1" Grid.Row="0" RadiusX="1"/>
+                                    <Rectangle Grid.Column="1" 
+                                               Fill="{StaticResource BorderAlt}" 
+                                               Height="18" 
+                                               RadiusY="1" 
+                                               Grid.Row="0" 
+                                               RadiusX="1" 
+                                               Width="19"
+                                               Margin="0"/>
+                                    <Popup x:Name="PART_Popup" AllowsTransparency="True" Placement="Bottom" PlacementTarget="{Binding ElementName=focusBorder}" StaysOpen="False">
+                                    </Popup>
+                                </Grid>
+                            </Grid>
+                        </Border>
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="sfskin:SfSkinManager.SizeMode" Value="Touch">
+                            <Setter Property="MinHeight" Value="{StaticResource TouchMode.MinHeight}"/>
+                            <Setter Property="MinHeight" TargetName="PART_Button" Value="{StaticResource TouchMode.MinHeight}"/>
+                            <Setter Property="MinWidth" TargetName="PART_Button" Value="{StaticResource TouchMode.MinSize}"/>
+                        </Trigger>                        
+                        <DataTrigger Binding="{Binding Source={x:Static SystemParameters.HighContrast}}" Value="false">
+                            <Setter Property="Foreground" TargetName="PART_TextBox" Value="{Binding Foreground, RelativeSource={RelativeSource TemplatedParent}}"/>
+                        </DataTrigger>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter Property="BorderBrush" TargetName="PART_Border" Value="{StaticResource BorderAlt2}"/>
+                            <Setter Property="Background" TargetName="PART_Border" Value="{StaticResource ContentBackgroundAlt4}"/>
+                            <Setter Property="Foreground" TargetName="PART_TextBox" Value="{StaticResource ContentForeground}"/>
+                            <Setter Property="CaretBrush" TargetName="PART_TextBox" Value="{StaticResource ContentForeground}"/>
+                            <Setter Property="BorderThickness" TargetName="PART_Button" Value="{StaticResource basetheme.BorderThickness}"/>
+                        </Trigger>
+                        <Trigger Property="IsEnabled" Value="False">
+                            <Setter Property="BorderBrush" TargetName="PART_Border" Value="{StaticResource BorderAlt}"/>
+                            <Setter Property="Background" TargetName="PART_Border" Value="{StaticResource BorderAlt}"/>
+                            <Setter Property="Foreground" TargetName="PART_TextBox" Value="{StaticResource DisabledForeground}"/>
+                        </Trigger>
+                        <Trigger Property="IsOpen" SourceName="PART_Popup" Value="True">
+                            <Setter Property="BorderThickness" TargetName="PART_Border" Value="{StaticResource basetheme.ThemeBorderThicknessVariant2}"/>
+                            <Setter Property="Foreground" TargetName="PART_TextBox" Value="{StaticResource ContentForeground}"/>
+                            <Setter Property="BorderBrush" TargetName="PART_Border" Value="Transparent"/>
+                            <Setter Property="BorderBrush" TargetName="focusBorder" Value="{StaticResource PrimaryBackground}"/>
+                        </Trigger>
+                        <Trigger Property="IsFocused" SourceName="PART_TextBox" Value="True">
+                            <Setter Property="BorderThickness" TargetName="PART_Border" Value="{StaticResource basetheme.ThemeBorderThicknessVariant2}"/>
+                            <Setter Property="Foreground" TargetName="PART_TextBox" Value="{StaticResource ContentForeground}"/>
+                            <Setter Property="BorderBrush" TargetName="PART_Border" Value="Transparent"/>
+                            <Setter Property="BorderBrush" TargetName="focusBorder" Value="{StaticResource PrimaryBackground}"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style BasedOn="{StaticResource WPFDatePickerStyle}" TargetType="{x:Type DatePicker}"/>
+
+</ResourceDictionary>

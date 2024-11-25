@@ -1,0 +1,993 @@
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:themelocal="clr-namespace:Syncfusion.Themes.basetheme.WPF"
+                    xmlns:shared="clr-namespace:Syncfusion.Windows.Shared;assembly=Syncfusion.Shared.WPF"
+                    xmlns:sfskin="clr-namespace:Syncfusion.SfSkinManager;assembly=Syncfusion.SfSkinManager.WPF"
+                    xmlns:sys="clr-namespace:System;assembly=mscorlib">
+
+	<ResourceDictionary.MergedDictionaries>
+        <sfskin:ResourceDictionaryProvider DictionaryName="Common" ThemeName="basetheme"/>
+        <sfskin:ResourceDictionaryProvider DictionaryName="Brushes" ThemeName="basetheme"/>
+    </ResourceDictionary.MergedDictionaries>
+    
+    <SolidColorBrush x:Key="ExpanderHeader.Static.Circle.Stroke" Color="#c8c8c8"/>
+
+    <SolidColorBrush x:Key="ExpanderHeader.Focused.Arrow.Stroke" Color="#FFFFFFFF"/>
+
+    <Style x:Key="ExpanderRightHeaderStyle" TargetType="{x:Type ToggleButton}">
+        <Setter Property="Background" Value="{StaticResource ContentBackgroundAlt1}"/>
+        <Setter Property="BorderBrush" Value="{StaticResource BorderAlt}"/>
+        <Setter Property="Foreground" Value="{StaticResource ContentForeground}"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type ToggleButton}">
+                    <Border x:Name="border" 
+                            Margin="{TemplateBinding Margin}"
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            Padding="{TemplateBinding Padding}">
+                        <Grid Background="Transparent" 
+                              SnapsToDevicePixels="True">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="19"/>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
+                            <Grid>
+                                <Grid.LayoutTransform>
+                                    <TransformGroup>
+                                        <TransformGroup.Children>
+                                            <TransformCollection>
+                                                <RotateTransform Angle="-90"/>
+                                            </TransformCollection>
+                                        </TransformGroup.Children>
+                                    </TransformGroup>
+                                </Grid.LayoutTransform>
+                                <Ellipse x:Name="circle" 
+                                         Width="19"
+                                         Height="19"
+                                         Fill="Transparent"  
+                                         Stroke="Transparent" 
+                                         HorizontalAlignment="Center"
+                                         VerticalAlignment="Center" />
+                                <TextBlock x:Name="arrow"
+                                           Text="&#xe701;"
+                                           FontFamily="pack://application:,,,/Syncfusion.Themes.basetheme.WPF;component/Common/FontFamily/#FluentThemeControlIcons"
+                                           Foreground="{StaticResource IconColor}"
+                                           HorizontalAlignment="Center" 
+                                           VerticalAlignment="Center"
+                                           SnapsToDevicePixels="false"
+                                           Margin="0,0,6,0"/>
+                            </Grid>
+                            <ContentPresenter  Grid.Row="1" 
+                                               HorizontalAlignment="Center" 
+                                               VerticalAlignment="Top"
+                                               RecognizesAccessKey="True" 
+                                               SnapsToDevicePixels="True"
+                                               Margin="2,6,2,0">
+                                <ContentPresenter.LayoutTransform>
+                                    <TransformGroup>
+                                        <TransformGroup.Children>
+                                            <TransformCollection>
+                                                <RotateTransform Angle="90"/>
+                                            </TransformCollection>
+                                        </TransformGroup.Children>
+                                    </TransformGroup>
+                                </ContentPresenter.LayoutTransform>
+                                <ContentPresenter.Resources>
+                                    <Style BasedOn="{x:Null}" TargetType="{x:Type TextBlock}"/>
+                                </ContentPresenter.Resources>
+                            </ContentPresenter>
+                        </Grid>
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsChecked" Value="true">
+                            <Setter Property="TextBlock.Text" TargetName="arrow" Value="&#xe702;"/>
+                        </Trigger>
+                        <Trigger Property="IsMouseOver" Value="true">
+                            <Setter Property="Foreground" TargetName="arrow" Value="{StaticResource HoveredForeground}"/>
+                            <Setter Property="Foreground" Value="{StaticResource HoveredForeground}"/>
+                            <Setter Property="Background" Value="{StaticResource ContentBackgroundHovered}"/>
+                            <Setter Property="BorderBrush" Value="{StaticResource BorderAlt}"/>
+                        </Trigger>
+                        <Trigger Property="IsPressed" Value="true">
+                            <Setter Property="Foreground" TargetName="arrow" Value="{StaticResource SelectedForeground}"/>
+                            <Setter Property="Foreground" Value="{StaticResource HoveredForeground}"/>
+                            <Setter Property="Background" Value="{StaticResource ContentBackgroundPressed}"/>
+                            <Setter Property="BorderBrush" Value="{StaticResource BorderAlt}"/>
+                        </Trigger>                      
+                        <Trigger Property="sfskin:SfSkinManager.SizeMode" Value="Touch">
+                            <Setter Property="MinWidth" Value="{StaticResource TouchMode.MinWidth}"/>
+                        </Trigger>
+                        <Trigger Property="IsEnabled" Value="false">
+                            <Setter Property="Foreground" TargetName="arrow" Value="{StaticResource IconColorDisabled}"/>
+                            <Setter Property="Foreground" Value="{StaticResource DisabledForeground}"/>
+                            <Setter Property="Background" Value="{StaticResource ContentBackgroundAlt1}"/>
+                            <Setter Property="BorderBrush" Value="{StaticResource BorderAlt}"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    <Style x:Key="ExpanderUpHeaderStyle" TargetType="{x:Type ToggleButton}">
+        <Setter Property="Background" Value="{StaticResource ContentBackgroundAlt1}"/>
+        <Setter Property="BorderBrush" Value="{StaticResource BorderAlt}"/>
+        <Setter Property="Foreground" Value="{StaticResource ContentForeground}"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type ToggleButton}">
+                    <Border x:Name="border" 
+                            Margin="{TemplateBinding Margin}"
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            Padding="{TemplateBinding Padding}" >
+                        <Grid Background="Transparent" 
+                              SnapsToDevicePixels="False">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="19"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <Grid>
+                                <Grid.LayoutTransform>
+                                    <TransformGroup>
+                                        <TransformGroup.Children>
+                                            <TransformCollection>
+                                                <RotateTransform Angle="180"/>
+                                            </TransformCollection>
+                                        </TransformGroup.Children>
+                                    </TransformGroup>
+                                </Grid.LayoutTransform>
+                                <Ellipse x:Name="circle"                                          
+                                         Grid.Column="0"
+                                         Fill="Transparent"  
+                                         Stroke="Transparent" 
+                                         HorizontalAlignment="Center" 
+                                         VerticalAlignment="Center" 
+                                         Width="19"
+                                         Height="19"/>
+                                <TextBlock x:Name="arrow"
+                                           Grid.Column="0"
+                                           Text="&#xe701;"
+                                           FontFamily="pack://application:,,,/Syncfusion.Themes.basetheme.WPF;component/Common/FontFamily/#FluentThemeControlIcons"
+                                           Foreground="{StaticResource IconColor}"
+                                           HorizontalAlignment="Center"
+                                           VerticalAlignment="Center"
+                                           SnapsToDevicePixels="false"
+                                           Margin="0,0,6,0"/>
+                            </Grid>
+                            <ContentPresenter Grid.Column="1" 
+                                              HorizontalAlignment="Left" 
+                                              VerticalAlignment="Center"                                              
+                                              RecognizesAccessKey="True" 
+                                              SnapsToDevicePixels="True"
+                                              Margin="6,2,0,2">
+                                <ContentPresenter.Resources>
+                                    <Style BasedOn="{x:Null}" TargetType="{x:Type TextBlock}"/>
+                                </ContentPresenter.Resources>
+                            </ContentPresenter>
+                        </Grid>
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsChecked" Value="true">
+                            <Setter Property="TextBlock.Text" TargetName="arrow" Value="&#xe702;"/>
+                        </Trigger>
+                        <Trigger Property="IsMouseOver" Value="true">
+                            <Setter Property="Foreground" TargetName="arrow" Value="{StaticResource HoveredForeground}"/>
+                            <Setter Property="Foreground" Value="{StaticResource HoveredForeground}"/>
+                            <Setter Property="Background" Value="{StaticResource ContentBackgroundHovered}"/>
+                            <Setter Property="BorderBrush" Value="{StaticResource BorderAlt}"/>
+                        </Trigger>
+                        <Trigger Property="IsPressed" Value="true">
+                            <Setter Property="Foreground" TargetName="arrow" Value="{StaticResource SelectedForeground}"/>
+                            <Setter Property="Foreground" Value="{StaticResource HoveredForeground}"/>
+                            <Setter Property="Background" Value="{StaticResource ContentBackgroundPressed}"/>
+                            <Setter Property="BorderBrush" Value="{StaticResource BorderAlt}"/>
+                        </Trigger>                      
+                        <Trigger Property="sfskin:SfSkinManager.SizeMode" Value="Touch">
+                            <Setter Property="MinHeight" Value="{StaticResource TouchMode.MinHeight}"/>
+                        </Trigger>
+                        <Trigger Property="IsEnabled" Value="false">
+                            <Setter Property="Foreground" TargetName="arrow" Value="{StaticResource IconColorDisabled}"/>
+                            <Setter Property="Foreground" Value="{StaticResource DisabledForeground}"/>
+                            <Setter Property="Background" Value="{StaticResource ContentBackgroundAlt1}"/>
+                            <Setter Property="BorderBrush" Value="{StaticResource BorderAlt}"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    <Style x:Key="ExpanderLeftHeaderStyle" TargetType="{x:Type ToggleButton}">
+        <Setter Property="Background" Value="{StaticResource ContentBackgroundAlt1}"/>
+        <Setter Property="BorderBrush" Value="{StaticResource BorderAlt}"/>
+        <Setter Property="Foreground" Value="{StaticResource ContentForeground}"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type ToggleButton}">
+                    <Border x:Name="border" 
+                            Margin="{TemplateBinding Margin}"
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}" 
+                            Padding="{TemplateBinding Padding}" >
+                        <Grid Background="Transparent"
+                              SnapsToDevicePixels="False">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="19"/>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
+                            <Grid>
+                                <Grid.LayoutTransform>
+                                    <TransformGroup>
+                                        <TransformGroup.Children>
+                                            <TransformCollection>
+                                                <RotateTransform Angle="90"/>
+                                            </TransformCollection>
+                                        </TransformGroup.Children>
+                                    </TransformGroup>
+                                </Grid.LayoutTransform>
+                                <Ellipse x:Name="circle" 
+                                         Width="19"
+                                         Height="19"
+                                         Fill="Transparent"  
+                                         Stroke="Transparent" 
+                                         HorizontalAlignment="Center" 
+                                         VerticalAlignment="Center" />
+                                <TextBlock x:Name="arrow"
+                                           Text="&#xe701;"
+                                           FontFamily="pack://application:,,,/Syncfusion.Themes.basetheme.WPF;component/Common/FontFamily/#FluentThemeControlIcons"
+                                           Foreground="{StaticResource IconColor}"
+                                           HorizontalAlignment="Center"
+                                           VerticalAlignment="Center"
+                                           SnapsToDevicePixels="false"
+                                           Margin="6,0,0,0"/>
+                            </Grid>
+                            <ContentPresenter Grid.Row="1" 
+                                              RecognizesAccessKey="True" 
+                                              SnapsToDevicePixels="True" 
+                                              HorizontalAlignment="Center" 
+                                              VerticalAlignment="Top"
+                                              Margin="2,6,2,0">
+                                <ContentPresenter.LayoutTransform>
+                                    <TransformGroup>
+                                        <TransformGroup.Children>
+                                            <TransformCollection>
+                                                <RotateTransform Angle="90"/>
+                                            </TransformCollection>
+                                        </TransformGroup.Children>
+                                    </TransformGroup>
+                                </ContentPresenter.LayoutTransform>
+                                <ContentPresenter.Resources>
+                                    <Style BasedOn="{x:Null}" TargetType="{x:Type TextBlock}"/>
+                                </ContentPresenter.Resources>
+                            </ContentPresenter>
+                        </Grid>
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsChecked" Value="true">
+                            <Setter Property="TextBlock.Text" TargetName="arrow" Value="&#xe702;"/>
+                        </Trigger>
+                        <Trigger Property="IsMouseOver" Value="true">
+                            <Setter Property="Foreground" TargetName="arrow" Value="{StaticResource HoveredForeground}"/>
+                            <Setter Property="Foreground" Value="{StaticResource HoveredForeground}"/>
+                            <Setter Property="Background" Value="{StaticResource ContentBackgroundHovered}"/>
+                            <Setter Property="BorderBrush" Value="{StaticResource BorderAlt}"/>
+                        </Trigger>
+                        <Trigger Property="IsPressed" Value="true">
+                            <Setter Property="Foreground" TargetName="arrow" Value="{StaticResource SelectedForeground}"/>
+                            <Setter Property="Foreground" Value="{StaticResource HoveredForeground}"/>
+                            <Setter Property="Background" Value="{StaticResource ContentBackgroundPressed}"/>
+                            <Setter Property="BorderBrush" Value="{StaticResource BorderAlt}"/>
+                        </Trigger>                       
+                        <Trigger Property="sfskin:SfSkinManager.SizeMode" Value="Touch">
+                            <Setter Property="MinWidth" Value="{StaticResource TouchMode.MinWidth}"/>
+                        </Trigger>
+                        <Trigger Property="IsEnabled" Value="false">
+                            <Setter Property="Foreground" TargetName="arrow" Value="{StaticResource IconColorDisabled}"/>
+                            <Setter Property="Foreground" Value="{StaticResource DisabledForeground}"/>
+                            <Setter Property="Background" Value="{StaticResource ContentBackgroundAlt1}"/>
+                            <Setter Property="BorderBrush" Value="{StaticResource BorderAlt}"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="ExpanderDownHeaderStyle" TargetType="{x:Type ToggleButton}">
+        <Setter Property="Background" Value="{StaticResource ContentBackgroundAlt1}"/>
+        <Setter Property="BorderBrush" Value="{StaticResource BorderAlt}"/>
+        <Setter Property="Foreground" Value="{StaticResource ContentForeground}"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type ToggleButton}">
+                    <Border Name="border"
+                            Margin="{TemplateBinding Margin}"
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}" 
+                            Padding="{TemplateBinding Padding}">
+                        <Grid Background="Transparent" 
+                              SnapsToDevicePixels="False">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="19"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <Ellipse x:Name="circle" 
+                                     Grid.Column="0"
+                                     Width="19"
+                                     Height="19"                                          
+                                     Fill="Transparent"  
+                                     Stroke="Transparent" 
+                                     HorizontalAlignment="Center"
+                                     VerticalAlignment="Center" />
+                            <TextBlock x:Name="arrow"
+                                       Grid.Column="0"
+                                       Text="&#xe701;"
+                                       FontFamily="pack://application:,,,/Syncfusion.Themes.basetheme.WPF;component/Common/FontFamily/#FluentThemeControlIcons"
+                                       Foreground="{StaticResource IconColor}"
+                                       HorizontalAlignment="Center"
+                                       VerticalAlignment="Center"
+                                       SnapsToDevicePixels="false"
+                                       Margin="6,0,0,0"/>
+                            <ContentPresenter Grid.Column="1" 
+                                              HorizontalAlignment="Left" 
+                                              VerticalAlignment="Center"                                              
+                                              RecognizesAccessKey="True" 
+                                              SnapsToDevicePixels="True"
+                                              Margin="6,2,0,2">
+                                <ContentPresenter.Resources>
+                                    <Style BasedOn="{x:Null}" TargetType="{x:Type TextBlock}"/>
+                                </ContentPresenter.Resources>
+                            </ContentPresenter>
+                        </Grid>
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsChecked" Value="true">
+                            <Setter Property="TextBlock.Text" TargetName="arrow" Value="&#xe702;"/>
+                        </Trigger>
+                        <Trigger Property="IsMouseOver" Value="true">
+                            <Setter Property="Foreground" TargetName="arrow" Value="{StaticResource HoveredForeground}"/>
+                            <Setter Property="Foreground" Value="{StaticResource HoveredForeground}"/>
+                            <Setter Property="Background" Value="{StaticResource ContentBackgroundHovered}"/>
+                            <Setter Property="BorderBrush" Value="{StaticResource BorderAlt}"/>
+                        </Trigger>
+                        <Trigger Property="IsPressed" Value="true">
+                            <Setter Property="Foreground" TargetName="arrow" Value="{StaticResource SelectedForeground}"/>
+                            <Setter Property="Foreground" Value="{StaticResource HoveredForeground}"/>
+                            <Setter Property="Background" Value="{StaticResource ContentBackgroundPressed}"/>
+                            <Setter Property="BorderBrush" Value="{StaticResource BorderAlt}"/>
+                        </Trigger>                       
+                        <Trigger Property="sfskin:SfSkinManager.SizeMode" Value="Touch">
+                            <Setter Property="MinHeight" Value="{StaticResource TouchMode.MinHeight}"/>
+                        </Trigger>
+                        <Trigger Property="IsEnabled" Value="false">
+                            <Setter Property="Foreground" TargetName="arrow" Value="{StaticResource IconColorDisabled}"/>
+                            <Setter Property="Foreground" Value="{StaticResource DisabledForeground}"/>
+                            <Setter Property="Background" Value="{StaticResource ContentBackgroundAlt1}"/>
+                            <Setter Property="BorderBrush" Value="{StaticResource BorderAlt}"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="ExpanderHeaderFocusVisual">
+        <Setter Property="Control.Template">
+            <Setter.Value>
+                <ControlTemplate>
+                    <Border>
+                        <Rectangle Margin="{StaticResource basetheme.FocusMargin}" 
+                                   Stroke="{StaticResource Border}" 
+                                   StrokeThickness="{StaticResource basetheme.StrokeThickness1}" 
+                                   StrokeDashArray="{StaticResource basetheme.StrokeDashArray}"
+                                   SnapsToDevicePixels="true" />
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="WPFExpanderStyle" TargetType="{x:Type Expander}">
+        <Setter Property="Background"                                
+                Value="{StaticResource ContentBackground}"/>
+        <Setter Property="BorderBrush"
+                Value="{StaticResource BorderAlt}"/>
+        <Setter Property="Foreground"
+                Value="{StaticResource ContentForeground}"/>
+        <Setter Property="FontFamily"
+                Value="{StaticResource basetheme.ThemeFontFamily}"/>
+        <Setter Property="FontSize"
+                Value="{StaticResource basetheme.SubHeaderTextStyle}"/>
+        <Setter Property="FontWeight"
+                Value="{StaticResource basetheme.FontWeightNormal}"/>
+        <Setter Property="BorderThickness" 
+                Value="{StaticResource basetheme.BorderThickness1}"/>
+        <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+        <Setter Property="VerticalContentAlignment" Value="Stretch"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type Expander}">
+                    <Border BorderBrush="{TemplateBinding BorderBrush}" 
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            Background="{TemplateBinding Background}" 
+                            CornerRadius="{StaticResource basetheme.ThemeCornerRadiusVariant1}"
+                            SnapsToDevicePixels="true">
+                        <DockPanel>
+                            <ToggleButton x:Name="HeaderSite" 
+                                          DockPanel.Dock="Top" 
+                                          ContentTemplate="{TemplateBinding HeaderTemplate}" 
+                                          ContentTemplateSelector="{TemplateBinding HeaderTemplateSelector}"
+                                          Content="{TemplateBinding Header}" 
+                                          FontWeight="{TemplateBinding FontWeight}"
+                                          FocusVisualStyle="{StaticResource ExpanderHeaderFocusVisual}"
+                                          FontStyle="{TemplateBinding FontStyle}" 
+                                          FontStretch="{TemplateBinding FontStretch}" 
+                                          FontSize="{TemplateBinding FontSize}" 
+                                          FontFamily="{TemplateBinding FontFamily}"
+                                          Padding="{TemplateBinding Padding}"
+                                          BorderThickness="0"
+                                          MinWidth="0" 
+                                          MinHeight="{StaticResource basetheme.MinHeight}" 
+                                          HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}" 
+                                          VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"
+                                          IsChecked="{Binding IsExpanded, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}" 
+                                          Style="{StaticResource ExpanderDownHeaderStyle}"/>
+                            <Border x:Name="ExpandSite"
+                                    DockPanel.Dock="Bottom"
+                                    Focusable="false"
+                                    Margin="{TemplateBinding Padding}"
+                                    Visibility="Collapsed"
+                                    Padding="0">
+                                <ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                                  VerticalAlignment="{TemplateBinding VerticalContentAlignment}" />
+                            </Border>                            
+                        </DockPanel>
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsExpanded" Value="true">
+                            <Setter Property="Visibility" TargetName="ExpandSite" Value="Visible"/>
+                            <Setter Property="BorderThickness" TargetName="HeaderSite" Value="{StaticResource Default.BorderThickess0001}"/>
+                        </Trigger>
+                        <MultiTrigger>
+                            <MultiTrigger.Conditions>
+                                <Condition Property="IsExpanded" Value="true"/>
+                                <Condition Property="ExpandDirection" Value="Down"/>
+                            </MultiTrigger.Conditions>
+                            <Setter Property="BorderThickness" TargetName="HeaderSite" Value="{StaticResource basetheme.BorderThickness0001}"/>
+                        </MultiTrigger>
+
+                        <MultiTrigger>
+                            <MultiTrigger.Conditions>
+                                <Condition Property="IsExpanded" Value="true"/>
+                                <Condition Property="ExpandDirection" Value="Left"/>
+                            </MultiTrigger.Conditions>
+                            <Setter Property="BorderThickness" TargetName="HeaderSite" Value="{StaticResource basetheme.BorderThickness1000}"/>
+                        </MultiTrigger>
+
+                        <MultiTrigger>
+                            <MultiTrigger.Conditions>
+                                <Condition Property="IsExpanded" Value="true"/>
+                                <Condition Property="ExpandDirection" Value="Right"/>
+                            </MultiTrigger.Conditions>
+                            <Setter Property="BorderThickness" TargetName="HeaderSite" Value="{StaticResource basetheme.BorderThickness0010}"/>
+                        </MultiTrigger>
+
+                        <MultiTrigger>
+                            <MultiTrigger.Conditions>
+                                <Condition Property="IsExpanded" Value="true"/>
+                                <Condition Property="ExpandDirection" Value="Up"/>
+                            </MultiTrigger.Conditions>
+                            <Setter Property="BorderThickness" TargetName="HeaderSite" Value="{StaticResource basetheme.BorderThickness0100}"/>
+                        </MultiTrigger>
+                        <Trigger Property="ExpandDirection" Value="Right">
+                            <Setter Property="DockPanel.Dock" TargetName="ExpandSite" Value="Right"/>
+                            <Setter Property="DockPanel.Dock" TargetName="HeaderSite" Value="Left"/>
+                            <Setter Property="MinWidth" TargetName="HeaderSite" Value="{StaticResource basetheme.MinHeight}"/>
+                            <Setter Property="MinHeight" TargetName="HeaderSite" Value="0"/>
+                            <Setter Property="Style" TargetName="HeaderSite" Value="{StaticResource ExpanderRightHeaderStyle}"/>
+                        </Trigger>
+                        <Trigger Property="ExpandDirection" Value="Up">
+                            <Setter Property="DockPanel.Dock" TargetName="ExpandSite" Value="Top"/>
+                            <Setter Property="DockPanel.Dock" TargetName="HeaderSite" Value="Bottom"/>
+                            <Setter Property="Style" TargetName="HeaderSite" Value="{StaticResource ExpanderUpHeaderStyle}"/>
+                        </Trigger>
+                        <Trigger Property="ExpandDirection" Value="Left">
+                            <Setter Property="DockPanel.Dock" TargetName="ExpandSite" Value="Left"/>
+                            <Setter Property="DockPanel.Dock" TargetName="HeaderSite" Value="Right"/>
+                            <Setter Property="MinWidth" TargetName="HeaderSite" Value="{StaticResource basetheme.MinHeight}"/>
+                            <Setter Property="MinHeight" TargetName="HeaderSite" Value="0"/>
+                            <Setter Property="Style" TargetName="HeaderSite" Value="{StaticResource ExpanderLeftHeaderStyle}"/>
+                        </Trigger>
+                        <Trigger Property="IsEnabled" Value="false">
+                            <Setter Property="Background" Value="{StaticResource ContentBackgroundAlt1}"/>
+                            <Setter Property="BorderBrush"  Value="{StaticResource BorderAlt}"/>
+                            <Setter Property="Foreground" Value="{StaticResource DisabledForeground}"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    <Style BasedOn="{StaticResource WPFExpanderStyle}" TargetType="{x:Type Expander}"/>
+
+    <Style x:Key="ExpanderFlatRightHeaderStyle" TargetType="{x:Type ToggleButton}">
+        <Setter Property="Background" Value="Transparent"/>
+        <Setter Property="BorderBrush" Value="Transparent"/>
+        <Setter Property="Foreground" Value="{StaticResource ContentForeground}"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type ToggleButton}">
+                    <Border Margin="{TemplateBinding Margin}"
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            Padding="{TemplateBinding Padding}">
+                        <Grid Background="Transparent" 
+                              SnapsToDevicePixels="True">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="19"/>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
+                            <Grid>
+                                <Grid.LayoutTransform>
+                                    <TransformGroup>
+                                        <TransformGroup.Children>
+                                            <TransformCollection>
+                                                <RotateTransform Angle="-90"/>
+                                            </TransformCollection>
+                                        </TransformGroup.Children>
+                                    </TransformGroup>
+                                </Grid.LayoutTransform>
+                                <Ellipse x:Name="circle" 
+                                         Width="19"
+                                         Height="19"
+                                         Fill="Transparent"  
+                                         Stroke="Transparent" 
+                                         HorizontalAlignment="Center"
+                                         VerticalAlignment="Center" />
+                                <TextBlock x:Name="arrow"
+                                           Text="&#xe701;"
+                                           FontFamily="pack://application:,,,/Syncfusion.Themes.basetheme.WPF;component/Common/FontFamily/#FluentThemeControlIcons"
+                                           Foreground="{StaticResource IconColor}"
+                                           HorizontalAlignment="Center" 
+                                           VerticalAlignment="Center"
+                                           SnapsToDevicePixels="false"
+                                           Margin="0,0,6,0"/>
+                            </Grid>
+                            <ContentPresenter  Grid.Row="1" 
+                                               HorizontalAlignment="Center" 
+                                               VerticalAlignment="Top"
+                                               RecognizesAccessKey="True" 
+                                               SnapsToDevicePixels="True"
+                                               Margin="2,6,2,0">
+                                <ContentPresenter.LayoutTransform>
+                                    <TransformGroup>
+                                        <TransformGroup.Children>
+                                            <TransformCollection>
+                                                <RotateTransform Angle="90"/>
+                                            </TransformCollection>
+                                        </TransformGroup.Children>
+                                    </TransformGroup>
+                                </ContentPresenter.LayoutTransform>
+                                <ContentPresenter.Resources>
+                                    <Style BasedOn="{x:Null}" TargetType="{x:Type TextBlock}"/>
+                                </ContentPresenter.Resources>
+                            </ContentPresenter>
+                        </Grid>
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsChecked" Value="true">
+                            <Setter Property="TextBlock.Text" TargetName="arrow" Value="&#xe702;"/>
+                        </Trigger>
+                        <Trigger Property="IsMouseOver" Value="true">
+                            <Setter Property="Foreground" TargetName="arrow" Value="{StaticResource HoveredForeground}"/>
+                            <Setter Property="Foreground" Value="{StaticResource HoveredForeground}"/>
+                            <Setter Property="Background" Value="{StaticResource ContentBackgroundHovered}"/>
+                            <Setter Property="BorderBrush" Value="{StaticResource BorderAlt}"/>
+                        </Trigger>
+                        <Trigger Property="IsPressed" Value="true">
+                            <Setter Property="Foreground" TargetName="arrow" Value="{StaticResource SelectedForeground}"/>
+                            <Setter Property="Foreground" Value="{StaticResource HoveredForeground}"/>
+                            <Setter Property="Background" Value="{StaticResource ContentBackgroundPressed}"/>
+                            <Setter Property="BorderBrush" Value="{StaticResource BorderAlt}"/>
+                        </Trigger>
+                        <Trigger Property="sfskin:SfSkinManager.SizeMode" Value="Touch">
+                            <Setter Property="MinWidth" Value="{StaticResource TouchMode.MinWidth}"/>
+                        </Trigger>
+                        <Trigger Property="IsEnabled" Value="false">
+                            <Setter Property="Foreground" TargetName="arrow" Value="{StaticResource IconColorDisabled}"/>
+                            <Setter Property="Foreground" Value="{StaticResource DisabledForeground}"/>
+                            <Setter Property="Background" Value="{StaticResource ContentBackgroundAlt1}"/>
+                            <Setter Property="BorderBrush" Value="{StaticResource BorderAlt}"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    <Style x:Key="ExpanderFlatUpHeaderStyle" TargetType="{x:Type ToggleButton}">
+        <Setter Property="Background" Value="Transparent"/>
+        <Setter Property="BorderBrush" Value="Transparent"/>
+        <Setter Property="Foreground" Value="{StaticResource ContentForeground}"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type ToggleButton}">
+                    <Border Margin="{TemplateBinding Margin}"
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            Padding="{TemplateBinding Padding}" >
+                        <Grid Background="Transparent" 
+                              SnapsToDevicePixels="False">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="19"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <Grid>
+                                <Grid.LayoutTransform>
+                                    <TransformGroup>
+                                        <TransformGroup.Children>
+                                            <TransformCollection>
+                                                <RotateTransform Angle="180"/>
+                                            </TransformCollection>
+                                        </TransformGroup.Children>
+                                    </TransformGroup>
+                                </Grid.LayoutTransform>
+                                <Ellipse x:Name="circle"                                          
+                                         Grid.Column="0"
+                                         Fill="Transparent"  
+                                         Stroke="Transparent" 
+                                         HorizontalAlignment="Center"
+                                         VerticalAlignment="Center" 
+                                         Width="19"
+                                         Height="19"/>
+                                <TextBlock x:Name="arrow"
+                                           Grid.Column="0"
+                                           Text="&#xe701;"
+                                           FontFamily="pack://application:,,,/Syncfusion.Themes.basetheme.WPF;component/Common/FontFamily/#FluentThemeControlIcons"
+                                           Foreground="{StaticResource IconColor}"
+                                           HorizontalAlignment="Center"
+                                           VerticalAlignment="Center"
+                                           SnapsToDevicePixels="false"
+                                           Margin="0,0,6,0"/>
+                            </Grid>
+                            <ContentPresenter Grid.Column="1"
+                                              HorizontalAlignment="Left" 
+                                              VerticalAlignment="Center"                                              
+                                              RecognizesAccessKey="True" 
+                                              SnapsToDevicePixels="True"
+                                              Margin="6,2,0,2">
+                                <ContentPresenter.Resources>
+                                    <Style BasedOn="{x:Null}" TargetType="{x:Type TextBlock}"/>
+                                </ContentPresenter.Resources>
+                            </ContentPresenter>
+                        </Grid>
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsChecked" Value="true">
+                            <Setter Property="TextBlock.Text" TargetName="arrow" Value="&#xe702;"/>
+                        </Trigger>
+                        <Trigger Property="IsMouseOver" Value="true">
+                            <Setter Property="Foreground" TargetName="arrow" Value="{StaticResource HoveredForeground}"/>
+                            <Setter Property="Foreground" Value="{StaticResource HoveredForeground}"/>
+                            <Setter Property="Background" Value="{StaticResource ContentBackgroundHovered}"/>
+                            <Setter Property="BorderBrush" Value="{StaticResource BorderAlt}"/>
+                        </Trigger>
+                        <Trigger Property="IsPressed" Value="true">
+                            <Setter Property="Foreground" TargetName="arrow" Value="{StaticResource SelectedForeground}"/>
+                            <Setter Property="Foreground" Value="{StaticResource HoveredForeground}"/>
+                            <Setter Property="Background" Value="{StaticResource ContentBackgroundPressed}"/>
+                            <Setter Property="BorderBrush" Value="{StaticResource BorderAlt}"/>
+                        </Trigger>
+                        <Trigger Property="sfskin:SfSkinManager.SizeMode" Value="Touch">
+                            <Setter Property="MinHeight" Value="{StaticResource TouchMode.MinHeight}"/>
+                        </Trigger>
+                        <Trigger Property="IsEnabled" Value="false">
+                            <Setter Property="Foreground" TargetName="arrow" Value="{StaticResource IconColorDisabled}"/>
+                            <Setter Property="Foreground" Value="{StaticResource DisabledForeground}"/>
+                            <Setter Property="Background" Value="{StaticResource ContentBackgroundAlt1}"/>
+                            <Setter Property="BorderBrush" Value="{StaticResource BorderAlt}"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    <Style x:Key="ExpanderFlatLeftHeaderStyle" TargetType="{x:Type ToggleButton}">
+        <Setter Property="Background" Value="Transparent"/>
+        <Setter Property="BorderBrush" Value="Transparent"/>
+        <Setter Property="Foreground" Value="{StaticResource ContentForeground}"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type ToggleButton}">
+                    <Border Margin="{TemplateBinding Margin}"
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}" 
+                            Padding="{TemplateBinding Padding}" >
+                        <Grid Background="Transparent"
+                              SnapsToDevicePixels="False">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="19"/>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
+                            <Grid>
+                                <Grid.LayoutTransform>
+                                    <TransformGroup>
+                                        <TransformGroup.Children>
+                                            <TransformCollection>
+                                                <RotateTransform Angle="90"/>
+                                            </TransformCollection>
+                                        </TransformGroup.Children>
+                                    </TransformGroup>
+                                </Grid.LayoutTransform>
+                                <Ellipse x:Name="circle" 
+                                         Width="19"
+                                         Height="19"
+                                         Fill="Transparent"  
+                                         Stroke="Transparent" 
+                                         HorizontalAlignment="Center" 
+                                         VerticalAlignment="Center"/>
+                                <TextBlock x:Name="arrow"
+                                           Text="&#xe701;"
+                                           FontFamily="pack://application:,,,/Syncfusion.Themes.basetheme.WPF;component/Common/FontFamily/#FluentThemeControlIcons"
+                                           Foreground="{StaticResource IconColor}"
+                                           HorizontalAlignment="Center"
+                                           VerticalAlignment="Center"
+                                           SnapsToDevicePixels="false"
+                                           Margin="6,0,0,0"/>
+                            </Grid>
+                            <ContentPresenter Grid.Row="1" 
+                                              RecognizesAccessKey="True" 
+                                              SnapsToDevicePixels="True" 
+                                              HorizontalAlignment="Center" 
+                                              VerticalAlignment="Top"
+                                              Margin="2,6,2,0">
+                                <ContentPresenter.LayoutTransform>
+                                    <TransformGroup>
+                                        <TransformGroup.Children>
+                                            <TransformCollection>
+                                                <RotateTransform Angle="90"/>
+                                            </TransformCollection>
+                                        </TransformGroup.Children>
+                                    </TransformGroup>
+                                </ContentPresenter.LayoutTransform>
+                                <ContentPresenter.Resources>
+                                    <Style BasedOn="{x:Null}" TargetType="{x:Type TextBlock}"/>
+                                </ContentPresenter.Resources>
+                            </ContentPresenter>
+                        </Grid>
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsChecked" Value="true">
+                            <Setter Property="TextBlock.Text" TargetName="arrow" Value="&#xe702;"/>
+                        </Trigger>
+                        <Trigger Property="IsMouseOver" Value="true">
+                            <Setter Property="Foreground" TargetName="arrow" Value="{StaticResource HoveredForeground}"/>
+                            <Setter Property="Foreground" Value="{StaticResource HoveredForeground}"/>
+                            <Setter Property="Background" Value="{StaticResource ContentBackgroundHovered}"/>
+                            <Setter Property="BorderBrush" Value="{StaticResource BorderAlt}"/>
+                        </Trigger>
+                        <Trigger Property="IsPressed" Value="true">
+                            <Setter Property="Foreground" TargetName="arrow" Value="{StaticResource SelectedForeground}"/>
+                            <Setter Property="Foreground" Value="{StaticResource HoveredForeground}"/>
+                            <Setter Property="Background" Value="{StaticResource ContentBackgroundPressed}"/>
+                            <Setter Property="BorderBrush" Value="{StaticResource BorderAlt}"/>
+                        </Trigger>
+                        <Trigger Property="sfskin:SfSkinManager.SizeMode" Value="Touch">
+                            <Setter Property="MinWidth" Value="{StaticResource TouchMode.MinWidth}"/>
+                        </Trigger>
+                        <Trigger Property="IsEnabled" Value="false">
+                            <Setter Property="Foreground" TargetName="arrow" Value="{StaticResource IconColorDisabled}"/>
+                            <Setter Property="Foreground" Value="{StaticResource DisabledForeground}"/>
+                            <Setter Property="Background" Value="{StaticResource ContentBackgroundAlt1}"/>
+                            <Setter Property="BorderBrush" Value="{StaticResource BorderAlt}"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="ExpanderFlatDownHeaderStyle" TargetType="{x:Type ToggleButton}">
+        <Setter Property="Background" Value="Transparent"/>
+        <Setter Property="BorderBrush" Value="Transparent"/>
+        <Setter Property="Foreground" Value="{StaticResource ContentForeground}"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type ToggleButton}">
+                    <Border Margin="{TemplateBinding Margin}"
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}" 
+                            Padding="{TemplateBinding Padding}">
+                        <Grid Background="Transparent" 
+                              SnapsToDevicePixels="False">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="19"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <Ellipse x:Name="circle" 
+                                     Grid.Column="0" 
+                                     Width="19"
+                                     Height="19"                                          
+                                     Fill="Transparent"  
+                                     Stroke="Transparent" 
+                                     HorizontalAlignment="Center"
+                                     VerticalAlignment="Center" />
+                            <TextBlock x:Name="arrow"
+                                       Grid.Column="0"
+                                       Text="&#xe701;"
+                                       FontFamily="pack://application:,,,/Syncfusion.Themes.basetheme.WPF;component/Common/FontFamily/#FluentThemeControlIcons"
+                                       Foreground="{StaticResource IconColor}"
+                                       HorizontalAlignment="Center"
+                                       VerticalAlignment="Center"
+                                       SnapsToDevicePixels="false"
+                                       Margin="6,0,0,0"/>
+                            <ContentPresenter Grid.Column="1"
+                                              HorizontalAlignment="Left" 
+                                              VerticalAlignment="Center"                                              
+                                              RecognizesAccessKey="True" 
+                                              SnapsToDevicePixels="True"
+                                              Margin="6,2,0,2">
+                                <ContentPresenter.Resources>
+                                    <Style BasedOn="{x:Null}" TargetType="{x:Type TextBlock}"/>
+                                </ContentPresenter.Resources>
+                            </ContentPresenter>
+                        </Grid>
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsChecked" Value="true">
+                            <Setter Property="TextBlock.Text" TargetName="arrow" Value="&#xe702;"/>
+                        </Trigger>
+                        <Trigger Property="IsMouseOver" Value="true">
+                            <Setter Property="Foreground" TargetName="arrow" Value="{StaticResource HoveredForeground}"/>
+                            <Setter Property="Foreground" Value="{StaticResource HoveredForeground}"/>
+                            <Setter Property="Background" Value="{StaticResource ContentBackgroundHovered}"/>
+                            <Setter Property="BorderBrush" Value="{StaticResource BorderAlt}"/>
+                        </Trigger>
+                        <Trigger Property="IsPressed" Value="true">
+                            <Setter Property="Foreground" TargetName="arrow" Value="{StaticResource SelectedForeground}"/>
+                            <Setter Property="Foreground" Value="{StaticResource HoveredForeground}"/>
+                            <Setter Property="Background" Value="{StaticResource ContentBackgroundPressed}"/>
+                            <Setter Property="BorderBrush" Value="{StaticResource BorderAlt}"/>
+                        </Trigger>
+                        <Trigger Property="sfskin:SfSkinManager.SizeMode" Value="Touch">
+                            <Setter Property="MinHeight" Value="{StaticResource TouchMode.MinHeight}"/>
+                        </Trigger>
+                        <Trigger Property="IsEnabled" Value="false">
+                            <Setter Property="Foreground" TargetName="arrow" Value="{StaticResource IconColorDisabled}"/>
+                            <Setter Property="Foreground" Value="{StaticResource DisabledForeground}"/>
+                            <Setter Property="Background" Value="{StaticResource ContentBackgroundAlt1}"/>
+                            <Setter Property="BorderBrush" Value="{StaticResource BorderAlt}"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="WPFFlatExpanderStyle" TargetType="{x:Type Expander}">
+        <Setter Property="Background"                                
+                Value="{StaticResource ContentBackground}"/>
+        <Setter Property="BorderBrush"
+                Value="Transparent"/>
+        <Setter Property="Foreground"
+                Value="{StaticResource ContentForeground}"/>
+        <Setter Property="FontFamily"
+                Value="{StaticResource basetheme.ThemeFontFamily}"/>
+        <Setter Property="FontSize"
+                Value="{StaticResource basetheme.SubHeaderTextStyle}"/>
+        <Setter Property="FontWeight"
+                Value="{StaticResource basetheme.FontWeightNormal}"/>
+        <Setter Property="BorderThickness" 
+                Value="{StaticResource basetheme.BorderThickness1}"/>
+        <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+        <Setter Property="VerticalContentAlignment" Value="Stretch"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type Expander}">
+                    <Border BorderBrush="{TemplateBinding BorderBrush}" 
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            Background="{TemplateBinding Background}" 
+                            CornerRadius="{StaticResource basetheme.ThemeCornerRadiusVariant1}" 
+                            SnapsToDevicePixels="true">
+                        <DockPanel>
+                            <ToggleButton x:Name="HeaderSite" 
+                                          DockPanel.Dock="Top" 
+                                          ContentTemplate="{TemplateBinding HeaderTemplate}" 
+                                          ContentTemplateSelector="{TemplateBinding HeaderTemplateSelector}"
+                                          Content="{TemplateBinding Header}" 
+                                          FontWeight="{TemplateBinding FontWeight}"
+                                          FocusVisualStyle="{StaticResource ExpanderHeaderFocusVisual}"
+                                          FontStyle="{TemplateBinding FontStyle}" 
+                                          FontStretch="{TemplateBinding FontStretch}" 
+                                          FontSize="{TemplateBinding FontSize}" 
+                                          FontFamily="{TemplateBinding FontFamily}"
+                                          Padding="{TemplateBinding Padding}"
+                                          BorderThickness="0"
+                                          MinWidth="0" 
+                                          MinHeight="{StaticResource basetheme.MinHeight}" 
+                                          HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}" 
+                                          VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"
+                                          IsChecked="{Binding IsExpanded, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}" 
+                                          Style="{StaticResource ExpanderFlatDownHeaderStyle}"/>
+                            <ContentPresenter x:Name="ExpandSite" 
+                                              DockPanel.Dock="Bottom" 
+                                              Focusable="false"  
+                                              Margin="{TemplateBinding Padding}" 
+                                              Visibility="Collapsed" 
+                                              HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                              VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
+                        </DockPanel>
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsExpanded" Value="true">
+                            <Setter Property="Visibility" TargetName="ExpandSite" Value="Visible"/>
+                            <Setter Property="BorderThickness" TargetName="HeaderSite" Value="{StaticResource Default.BorderThickess0001}"/>
+                        </Trigger>
+                        <MultiTrigger>
+                            <MultiTrigger.Conditions>
+                                <Condition Property="IsExpanded" Value="true"/>
+                                <Condition Property="ExpandDirection" Value="Down"/>
+                            </MultiTrigger.Conditions>
+                            <Setter Property="BorderThickness" TargetName="HeaderSite" Value="{StaticResource basetheme.BorderThickness0001}"/>
+                        </MultiTrigger>
+
+                        <MultiTrigger>
+                            <MultiTrigger.Conditions>
+                                <Condition Property="IsExpanded" Value="true"/>
+                                <Condition Property="ExpandDirection" Value="Left"/>
+                            </MultiTrigger.Conditions>
+                            <Setter Property="BorderThickness" TargetName="HeaderSite" Value="{StaticResource basetheme.BorderThickness1000}"/>
+                        </MultiTrigger>
+
+                        <MultiTrigger>
+                            <MultiTrigger.Conditions>
+                                <Condition Property="IsExpanded" Value="true"/>
+                                <Condition Property="ExpandDirection" Value="Right"/>
+                            </MultiTrigger.Conditions>
+                            <Setter Property="BorderThickness" TargetName="HeaderSite" Value="{StaticResource basetheme.BorderThickness0010}"/>
+                        </MultiTrigger>
+
+                        <MultiTrigger>
+                            <MultiTrigger.Conditions>
+                                <Condition Property="IsExpanded" Value="true"/>
+                                <Condition Property="ExpandDirection" Value="Up"/>
+                            </MultiTrigger.Conditions>
+                            <Setter Property="BorderThickness" TargetName="HeaderSite" Value="{StaticResource basetheme.BorderThickness0100}"/>
+                        </MultiTrigger>
+                        <Trigger Property="ExpandDirection" Value="Right">
+                            <Setter Property="DockPanel.Dock" TargetName="ExpandSite" Value="Right"/>
+                            <Setter Property="DockPanel.Dock" TargetName="HeaderSite" Value="Left"/>
+                            <Setter Property="MinWidth" TargetName="HeaderSite" Value="{StaticResource basetheme.MinHeight}"/>
+                            <Setter Property="MinHeight" TargetName="HeaderSite" Value="0"/>
+                            <Setter Property="Style" TargetName="HeaderSite" Value="{StaticResource ExpanderFlatRightHeaderStyle}"/>
+                        </Trigger>
+                        <Trigger Property="ExpandDirection" Value="Up">
+                            <Setter Property="DockPanel.Dock" TargetName="ExpandSite" Value="Top"/>
+                            <Setter Property="DockPanel.Dock" TargetName="HeaderSite" Value="Bottom"/>
+                            <Setter Property="Style" TargetName="HeaderSite" Value="{StaticResource ExpanderFlatUpHeaderStyle}"/>
+                        </Trigger>
+                        <Trigger Property="ExpandDirection" Value="Left">
+                            <Setter Property="DockPanel.Dock" TargetName="ExpandSite" Value="Left"/>
+                            <Setter Property="DockPanel.Dock" TargetName="HeaderSite" Value="Right"/>
+                            <Setter Property="MinWidth" TargetName="HeaderSite" Value="{StaticResource basetheme.MinHeight}"/>
+                            <Setter Property="MinHeight" TargetName="HeaderSite" Value="0"/>
+                            <Setter Property="Style" TargetName="HeaderSite" Value="{StaticResource ExpanderFlatLeftHeaderStyle}"/>
+                        </Trigger>
+                        <Trigger Property="IsEnabled" Value="false">
+                            <Setter Property="Background" Value="{StaticResource ContentBackgroundAlt1}"/>
+                            <Setter Property="BorderBrush"  Value="{StaticResource BorderAlt}"/>
+                            <Setter Property="Foreground" Value="{StaticResource DisabledForeground}"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+</ResourceDictionary>

@@ -1,0 +1,1 @@
+set_property(GLOBAL PROPERTY ArbitorThemeBase "${CMAKE_SOURCE_DIR}/Code/Arbitor/Themes/bin/Release/Syncfusion.Themes.basetheme.WPF.dll")

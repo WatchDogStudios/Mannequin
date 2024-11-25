@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Game configVersion="0">
+  <!-- Version "1" is supported by March 2022 GDK or later -->
+
+  <Identity Name="Blackspace"
+            Publisher="CN=WD Studios, O=WD Studios, L=Alphertta, S=Georgia, C=US"
+            Version="1.0.0.0"/>
+  
+  <ExecutableList>
+    <Executable Name="nsPlayer.exe"
+                Id="Game" />
+  </ExecutableList>
+ 
+  <ShellVisuals DefaultDisplayName="Blackspace GDK Game"
+                PublisherDisplayName="WD Studios Gaming Division"
+                Square480x480Logo="LargeLogo.png"
+                Square150x150Logo="Logo.png"
+                Square44x44Logo="SmallLogo.png"
+                Description="Game That Runs on the Blackspace Engine"
+                ForegroundText="dark"
+                BackgroundColor="#000000"
+                SplashScreenImage="SplashScreen.png"
+                StoreLogo="StoreLogo.png"/>
+</Game>
