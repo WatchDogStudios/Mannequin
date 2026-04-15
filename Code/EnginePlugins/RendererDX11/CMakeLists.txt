@@ -1,0 +1,23 @@
+ns_cmake_init()
+
+ns_requires_desktop()
+
+get_filename_component(PROJECT_NAME ${CMAKE_CURRENT_SOURCE_DIR} NAME_WE)
+
+ns_create_target(SHARED_LIBRARY ${PROJECT_NAME})
+
+target_include_directories(${PROJECT_NAME}
+  PRIVATE
+    ${CMAKE_CURRENT_SOURCE_DIR}
+)
+
+target_link_libraries(${PROJECT_NAME}
+  PUBLIC
+    RendererCore
+  PRIVATE
+    d3d11
+    dxgi
+    d3dcompiler
+)
+
+ns_add_output_ns_prefix(${PROJECT_NAME})
