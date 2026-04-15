@@ -3,6 +3,8 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:syncfusion="http://schemas.syncfusion.com/wpf"
+        xmlns:syncfusionskin="clr-namespace:Syncfusion.SfSkinManager;assembly=Syncfusion.SfSkinManager.WPF"
         xmlns:local="clr-namespace:T3"
         mc:Ignorable="d"
         Title="Mannequin — Visual Graphics Test Runner" Height="1080" Width="1920"
@@ -15,34 +17,33 @@
         </Grid.RowDefinitions>
 
         <!-- Toolbar -->
-        <ToolBar Grid.Row="0">
-            <Button Content="File" x:Name="B_FileToolBar" Click="OnFileClick"/>
-            <Button Content="Run All Tests" x:Name="B_RunTests" Click="OnRunTestsClick"/>
-            <Button Content="Run Selected" x:Name="B_RunSelected" Click="OnRunSelectedClick"/>
-            <Button Content="Stop" x:Name="B_StopTests" Click="OnStopTestsClick" IsEnabled="False"/>
-            <Separator/>
-            <Button Content="Update Baselines" x:Name="B_UpdateBaselines" Click="OnUpdateBaselinesClick"/>
-            <Separator/>
-            <ComboBox x:Name="CB_GraphicsAPI" Width="120" SelectionChanged="OnAPISelectionChanged">
-                <ComboBoxItem Content="DX12" IsSelected="True"/>
-                <ComboBoxItem Content="Vulkan"/>
-                <ComboBoxItem Content="DX11"/>
-                <ComboBoxItem Content="All APIs"/>
-            </ComboBox>
-            <Separator/>
-            <Button Content="Settings" x:Name="B_Settings" Click="OnSettingsClick"/>
-        </ToolBar>
+        <syncfusion:ToolBarAdv Grid.Row="0">
+            <syncfusion:ToolBarAdv.Items>
+                <syncfusion:ButtonAdv Content="File" x:Name="B_FileToolBar" Click="OnFileClick"/>
+                <syncfusion:ButtonAdv Content="Run All Tests" x:Name="B_RunTests" Click="OnRunTestsClick"/>
+                <syncfusion:ButtonAdv Content="Run Selected" x:Name="B_RunSelected" Click="OnRunSelectedClick"/>
+                <syncfusion:ButtonAdv Content="Stop" x:Name="B_StopTests" Click="OnStopTestsClick" IsEnabled="False"/>
+                <Separator/>
+                <syncfusion:ButtonAdv Content="Update Baselines" x:Name="B_UpdateBaselines" Click="OnUpdateBaselinesClick"/>
+                <Separator/>
+                <ComboBox x:Name="CB_GraphicsAPI" Width="120" SelectionChanged="OnAPISelectionChanged">
+                    <ComboBoxItem Content="DX12" IsSelected="True"/>
+                    <ComboBoxItem Content="Vulkan"/>
+                    <ComboBoxItem Content="DX11"/>
+                    <ComboBoxItem Content="All APIs"/>
+                </ComboBox>
+                <Separator/>
+                <syncfusion:ButtonAdv Content="Settings" x:Name="B_Settings" Click="OnSettingsClick"/>
+            </syncfusion:ToolBarAdv.Items>
+        </syncfusion:ToolBarAdv>
 
-        <!-- Main Layout -->
-        <Grid Grid.Row="1">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="300"/>
-                <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="280"/>
-            </Grid.ColumnDefinitions>
+        <!-- Main Docking Layout -->
+        <syncfusion:DockingManager x:Name="MainDockingManager" UseDocumentContainer="True" PersistState="True" Grid.Row="1">
 
             <!-- Test List Panel (Left) -->
-            <GroupBox Header="Tests" Grid.Column="0" Margin="2">
+            <ContentControl x:Name="TestListPanel" syncfusion:DockingManager.Header="Tests"
+                            syncfusion:DockingManager.SideInDockedMode="Left"
+                            syncfusion:DockingManager.DesiredWidthInDockedMode="300">
                 <Grid>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto"/>
@@ -66,118 +67,68 @@
                         </ListBox.ItemTemplate>
                     </ListBox>
                 </Grid>
-            </GroupBox>
+            </ContentControl>
 
-            <!-- Center: Image Comparison + Log/Summary -->
-            <Grid Grid.Column="1">
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="*"/>
-                    <RowDefinition Height="200"/>
-                </Grid.RowDefinitions>
-
-                <!-- Image Comparison Viewport -->
-                <GroupBox Header="Image Comparison" Grid.Row="0" Margin="2">
-                    <Grid>
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="Auto"/>
-                            <RowDefinition Height="*"/>
-                        </Grid.RowDefinitions>
-                        <StackPanel Orientation="Horizontal" Grid.Row="0" Margin="4">
-                            <RadioButton x:Name="RB_SideBySide" Content="Side by Side" IsChecked="True"
-                                         Checked="OnViewModeChanged" Margin="4"/>
-                            <RadioButton x:Name="RB_Overlay" Content="Overlay" Checked="OnViewModeChanged" Margin="4"/>
-                            <RadioButton x:Name="RB_DiffOnly" Content="Diff Heatmap" Checked="OnViewModeChanged" Margin="4"/>
-                            <Slider x:Name="SL_Opacity" Width="150" Minimum="0" Maximum="1" Value="0.5"
-                                    Margin="8,0,0,0" ToolTip="Overlay opacity"/>
-                        </StackPanel>
-                        <Grid Grid.Row="1">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*"/>
-                                <ColumnDefinition Width="*"/>
-                                <ColumnDefinition Width="*"/>
-                            </Grid.ColumnDefinitions>
-                            <Grid Grid.Column="0">
-                                <Grid.RowDefinitions>
-                                    <RowDefinition Height="Auto"/>
-                                    <RowDefinition Height="*"/>
-                                </Grid.RowDefinitions>
-                                <TextBlock Text="Test Output" FontWeight="Bold" Margin="4" Grid.Row="0"/>
-                                <Border Grid.Row="1" BorderBrush="Gray" BorderThickness="1" Margin="2">
-                                    <Image x:Name="IMG_TestOutput" Stretch="Uniform"/>
-                                </Border>
-                            </Grid>
-                            <Grid Grid.Column="1">
-                                <Grid.RowDefinitions>
-                                    <RowDefinition Height="Auto"/>
-                                    <RowDefinition Height="*"/>
-                                </Grid.RowDefinitions>
-                                <TextBlock Text="Reference" FontWeight="Bold" Margin="4" Grid.Row="0"/>
-                                <Border Grid.Row="1" BorderBrush="Gray" BorderThickness="1" Margin="2">
-                                    <Image x:Name="IMG_Reference" Stretch="Uniform"/>
-                                </Border>
-                            </Grid>
-                            <Grid Grid.Column="2">
-                                <Grid.RowDefinitions>
-                                    <RowDefinition Height="Auto"/>
-                                    <RowDefinition Height="*"/>
-                                </Grid.RowDefinitions>
-                                <TextBlock Text="Difference Heatmap" FontWeight="Bold" Margin="4" Grid.Row="0"/>
-                                <Border Grid.Row="1" BorderBrush="Gray" BorderThickness="1" Margin="2">
-                                    <Image x:Name="IMG_Diff" Stretch="Uniform"/>
-                                </Border>
-                            </Grid>
+            <!-- Image Comparison Viewport (Center/Document) -->
+            <ContentControl x:Name="ViewportPanel" syncfusion:DockingManager.Header="Image Comparison"
+                            syncfusion:DockingManager.State="Document">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+                    <StackPanel Orientation="Horizontal" Grid.Row="0" Margin="4">
+                        <RadioButton x:Name="RB_SideBySide" Content="Side by Side" IsChecked="True"
+                                     Checked="OnViewModeChanged" Margin="4"/>
+                        <RadioButton x:Name="RB_Overlay" Content="Overlay" Checked="OnViewModeChanged" Margin="4"/>
+                        <RadioButton x:Name="RB_DiffOnly" Content="Diff Heatmap" Checked="OnViewModeChanged" Margin="4"/>
+                        <Slider x:Name="SL_Opacity" Width="150" Minimum="0" Maximum="1" Value="0.5"
+                                Margin="8,0,0,0" ToolTip="Overlay opacity"/>
+                    </StackPanel>
+                    <Grid Grid.Row="1">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid Grid.Column="0">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
+                            <TextBlock Text="Test Output" FontWeight="Bold" Margin="4" Grid.Row="0"/>
+                            <Border Grid.Row="1" BorderBrush="Gray" BorderThickness="1" Margin="2">
+                                <Image x:Name="IMG_TestOutput" Stretch="Uniform"/>
+                            </Border>
+                        </Grid>
+                        <Grid Grid.Column="1">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
+                            <TextBlock Text="Reference" FontWeight="Bold" Margin="4" Grid.Row="0"/>
+                            <Border Grid.Row="1" BorderBrush="Gray" BorderThickness="1" Margin="2">
+                                <Image x:Name="IMG_Reference" Stretch="Uniform"/>
+                            </Border>
+                        </Grid>
+                        <Grid Grid.Column="2">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
+                            <TextBlock Text="Difference Heatmap" FontWeight="Bold" Margin="4" Grid.Row="0"/>
+                            <Border Grid.Row="1" BorderBrush="Gray" BorderThickness="1" Margin="2">
+                                <Image x:Name="IMG_Diff" Stretch="Uniform"/>
+                            </Border>
                         </Grid>
                     </Grid>
-                </GroupBox>
-
-                <!-- Log / Summary Tabs -->
-                <TabControl Grid.Row="1" Margin="2">
-                    <TabItem Header="Log">
-                        <Grid>
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="Auto"/>
-                                <RowDefinition Height="*"/>
-                            </Grid.RowDefinitions>
-                            <StackPanel Orientation="Horizontal" Grid.Row="0" Margin="4">
-                                <Button Content="Clear" x:Name="B_ClearLog" Click="OnClearLogClick" Padding="8,2"/>
-                            </StackPanel>
-                            <ListBox x:Name="LB_Log" Grid.Row="1" Margin="4" FontFamily="Consolas" FontSize="11"/>
-                        </Grid>
-                    </TabItem>
-                    <TabItem Header="Summary">
-                        <Grid Margin="8">
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="Auto"/>
-                                <RowDefinition Height="*"/>
-                            </Grid.RowDefinitions>
-                            <StackPanel Grid.Row="0">
-                                <TextBlock Text="Test Run Summary" FontWeight="Bold" FontSize="14"/>
-                                <Separator Margin="0,4,0,8"/>
-                                <StackPanel Orientation="Horizontal">
-                                    <TextBlock Text="Total: " FontWeight="SemiBold"/>
-                                    <TextBlock x:Name="TB_TotalTests" Text="0"/>
-                                    <TextBlock Text="  |  Passed: " FontWeight="SemiBold" Foreground="Green" Margin="16,0,0,0"/>
-                                    <TextBlock x:Name="TB_PassedTests" Text="0" Foreground="Green"/>
-                                    <TextBlock Text="  |  Failed: " FontWeight="SemiBold" Foreground="Red" Margin="16,0,0,0"/>
-                                    <TextBlock x:Name="TB_FailedTests" Text="0" Foreground="Red"/>
-                                    <TextBlock Text="  |  Skipped: " FontWeight="SemiBold" Foreground="Gray" Margin="16,0,0,0"/>
-                                    <TextBlock x:Name="TB_SkippedTests" Text="0" Foreground="Gray"/>
-                                    <TextBlock Text="  |  New Baselines: " FontWeight="SemiBold" Foreground="DodgerBlue" Margin="16,0,0,0"/>
-                                    <TextBlock x:Name="TB_NewBaselines" Text="0" Foreground="DodgerBlue"/>
-                                </StackPanel>
-                                <StackPanel Orientation="Horizontal" Margin="0,4,0,0">
-                                    <TextBlock Text="Total Time: " FontWeight="SemiBold"/>
-                                    <TextBlock x:Name="TB_TotalTime" Text="-"/>
-                                </StackPanel>
-                                <ProgressBar x:Name="PB_TestProgress" Height="8" Margin="0,8,0,0" Value="0"/>
-                            </StackPanel>
-                        </Grid>
-                    </TabItem>
-                </TabControl>
-            </Grid>
+                </Grid>
+            </ContentControl>
 
             <!-- Properties Panel (Right) -->
-            <GroupBox Header="Test Details" Grid.Column="2" Margin="2">
+            <ContentControl x:Name="PropertiesPanel" syncfusion:DockingManager.Header="Test Details"
+                            syncfusion:DockingManager.SideInDockedMode="Right"
+                            syncfusion:DockingManager.DesiredWidthInDockedMode="280">
                 <ScrollViewer VerticalScrollBarVisibility="Auto">
                     <StackPanel Margin="8">
                         <TextBlock x:Name="TB_TestName" Text="No test selected" FontWeight="Bold" FontSize="14"/>
@@ -206,8 +157,57 @@
                         <TextBlock x:Name="TB_ErrorMsg" Text="" Foreground="OrangeRed" TextWrapping="Wrap"/>
                     </StackPanel>
                 </ScrollViewer>
-            </GroupBox>
-        </Grid>
+            </ContentControl>
+
+            <!-- Log Panel (Bottom) -->
+            <ContentControl x:Name="LogPanel" syncfusion:DockingManager.Header="Log"
+                            syncfusion:DockingManager.SideInDockedMode="Bottom"
+                            syncfusion:DockingManager.DesiredHeightInDockedMode="200">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+                    <StackPanel Orientation="Horizontal" Grid.Row="0" Margin="4">
+                        <Button Content="Clear" x:Name="B_ClearLog" Click="OnClearLogClick" Padding="8,2"/>
+                    </StackPanel>
+                    <ListBox x:Name="LB_Log" Grid.Row="1" Margin="4" FontFamily="Consolas" FontSize="11"/>
+                </Grid>
+            </ContentControl>
+
+            <!-- Summary Panel (Bottom-Right) -->
+            <ContentControl x:Name="SummaryPanel" syncfusion:DockingManager.Header="Summary"
+                            syncfusion:DockingManager.SideInDockedMode="Tabbed"
+                            syncfusion:DockingManager.TargetNameInDockedMode="LogPanel">
+                <Grid Margin="8">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+                    <StackPanel Grid.Row="0">
+                        <TextBlock Text="Test Run Summary" FontWeight="Bold" FontSize="14"/>
+                        <Separator Margin="0,4,0,8"/>
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="Total: " FontWeight="SemiBold"/>
+                            <TextBlock x:Name="TB_TotalTests" Text="0"/>
+                            <TextBlock Text="  |  Passed: " FontWeight="SemiBold" Foreground="Green" Margin="16,0,0,0"/>
+                            <TextBlock x:Name="TB_PassedTests" Text="0" Foreground="Green"/>
+                            <TextBlock Text="  |  Failed: " FontWeight="SemiBold" Foreground="Red" Margin="16,0,0,0"/>
+                            <TextBlock x:Name="TB_FailedTests" Text="0" Foreground="Red"/>
+                            <TextBlock Text="  |  Skipped: " FontWeight="SemiBold" Foreground="Gray" Margin="16,0,0,0"/>
+                            <TextBlock x:Name="TB_SkippedTests" Text="0" Foreground="Gray"/>
+                            <TextBlock Text="  |  New Baselines: " FontWeight="SemiBold" Foreground="DodgerBlue" Margin="16,0,0,0"/>
+                            <TextBlock x:Name="TB_NewBaselines" Text="0" Foreground="DodgerBlue"/>
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal" Margin="0,4,0,0">
+                            <TextBlock Text="Total Time: " FontWeight="SemiBold"/>
+                            <TextBlock x:Name="TB_TotalTime" Text="-"/>
+                        </StackPanel>
+                        <ProgressBar x:Name="PB_TestProgress" Height="8" Margin="0,8,0,0" Value="0"/>
+                    </StackPanel>
+                </Grid>
+            </ContentControl>
+        </syncfusion:DockingManager>
 
         <!-- Status Bar -->
         <StatusBar Grid.Row="2">

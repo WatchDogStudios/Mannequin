@@ -20,6 +20,20 @@ float nsImageUtils::ComputeMSE(const nsImage& imageA, const nsImage& imageB)
   return 0.0f;
 }
 
+nsUInt32 nsImageUtils::ComputeMeanSquareError(const nsImage& differenceImage, nsUInt32 uiBlockSize)
+{
+  // Stub: return 0 (no error)
+  return 0;
+}
+
+void nsImageUtils::ComputeImageDifferenceABS(const nsImage& imageA, const nsImage& imageB, nsImage& ref_diff)
+{
+  if (!imageA.IsValid() || !imageB.IsValid())
+    return;
+
+  ref_diff.ResetAndAlloc(imageA.GetImageFormat(), imageA.GetWidth(), imageA.GetHeight());
+}
+
 nsResult nsImageUtils::ComputeDifferenceImage(const nsImage& imageA, const nsImage& imageB, nsImage& ref_diff)
 {
   if (!imageA.IsValid() || !imageB.IsValid())
@@ -33,6 +47,12 @@ nsResult nsImageUtils::CopySubImage(const nsImage& source, nsImage& ref_target, 
 {
   nsLog::Warning("nsImageUtils::CopySubImage not yet implemented");
   return NS_FAILURE;
+}
+
+void nsImageUtils::CropImage(const nsImage& source, const nsVec2I32& vOffset, const nsSizeU32& size, nsImage& ref_output)
+{
+  nsLog::Warning("nsImageUtils::CropImage not yet implemented");
+  ref_output.ResetAndAlloc(source.GetImageFormat(), size.width, size.height);
 }
 
 void nsImageUtils::FlipVertically(nsImage& inout_image)
@@ -60,4 +80,21 @@ void nsImageUtils::CreateSolidColorImage(nsImage& ref_image, nsUInt32 uiWidth, n
     pData[i * 4 + 2] = b;
     pData[i * 4 + 3] = a;
   }
+}
+
+void nsImageUtils::CreateImageDiffHtml(nsStringBuilder& ref_html, nsStringView sTitle,
+  const nsImage& expectedRgb, const nsImage& expectedAlpha,
+  const nsImage& actualRgb, const nsImage& actualAlpha,
+  const nsImage& diffRgb, const nsImage& diffAlpha,
+  nsUInt32 uiMSE, nsUInt32 uiMSEThreshold,
+  nsUInt32 uiMinDiffRgb, nsUInt32 uiMaxDiffRgb,
+  nsUInt32 uiMinDiffAlpha, nsUInt32 uiMaxDiffAlpha)
+{
+  ref_html.Clear();
+  ref_html.AppendFormat("<html><head><title>{}</title></head><body>", sTitle);
+  ref_html.AppendFormat("<h1>{}</h1>", sTitle);
+  ref_html.AppendFormat("<p>MSE: {} (threshold: {})</p>", uiMSE, uiMSEThreshold);
+  ref_html.AppendFormat("<p>RGB diff range: [{}, {}]</p>", uiMinDiffRgb, uiMaxDiffRgb);
+  ref_html.AppendFormat("<p>Alpha diff range: [{}, {}]</p>", uiMinDiffAlpha, uiMaxDiffAlpha);
+  ref_html.Append("</body></html>");
 }

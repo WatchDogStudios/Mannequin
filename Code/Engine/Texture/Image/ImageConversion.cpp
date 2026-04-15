@@ -19,3 +19,20 @@ bool nsImageConversion::IsConvertible(nsImageFormat::Enum sourceFormat, nsImageF
   // Stub: only same-format "conversion" is supported
   return sourceFormat == targetFormat;
 }
+
+nsResult nsImageConversion::BuildPath(nsImageFormat::Enum sourceFormat, nsImageFormat::Enum targetFormat, bool bSourceEqualsTarget,
+  nsHybridArray<ConversionPathNode, 16>& ref_path, nsUInt32& ref_uiNumScratchBuffers)
+{
+  ref_path.Clear();
+  ref_uiNumScratchBuffers = 0;
+
+  if (sourceFormat == targetFormat)
+    return NS_SUCCESS;
+
+  ConversionPathNode node;
+  node.m_sourceFormat = sourceFormat;
+  node.m_targetFormat = targetFormat;
+  ref_path.PushBack(node);
+
+  return NS_SUCCESS;
+}

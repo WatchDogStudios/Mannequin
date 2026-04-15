@@ -1,4 +1,5 @@
 #include <Texture/Image/Image.h>
+#include <Texture/Image/ImageConversion.h>
 #include <Foundation/Logging/Log.h>
 
 // Helper: bytes per pixel for uncompressed formats
@@ -19,6 +20,11 @@ static nsUInt32 GetBytesPerPixel(nsImageFormat::Enum format)
       return 8;
     case nsImageFormat::R32G32B32A32_FLOAT:
       return 16;
+    case nsImageFormat::BC1_UNORM:
+      return 0; // block compressed
+    case nsImageFormat::BC3_UNORM:
+    case nsImageFormat::BC7_UNORM:
+      return 0; // block compressed
     default:
       return 0;
   }
@@ -29,6 +35,40 @@ static nsUInt32 GetMipDimension(nsUInt32 uiBase, nsUInt32 uiMipLevel)
   nsUInt32 val = uiBase >> uiMipLevel;
   return val > 0 ? val : 1;
 }
+
+// nsImageFormat static methods
+
+bool nsImageFormat::IsSrgb(Enum format)
+{
+  return format == R8G8B8A8_UNORM_SRGB || format == B8G8R8A8_UNORM_SRGB;
+}
+
+bool nsImageFormat::IsCompressed(Enum format)
+{
+  return format == BC1_UNORM || format == BC3_UNORM || format == BC7_UNORM;
+}
+
+const char* nsImageFormat::GetName(Enum format)
+{
+  switch (format)
+  {
+    case R8G8B8A8_UNORM: return "R8G8B8A8_UNORM";
+    case R8G8B8A8_UNORM_SRGB: return "R8G8B8A8_UNORM_SRGB";
+    case B8G8R8A8_UNORM: return "B8G8R8A8_UNORM";
+    case B8G8R8A8_UNORM_SRGB: return "B8G8R8A8_UNORM_SRGB";
+    case R32G32B32A32_FLOAT: return "R32G32B32A32_FLOAT";
+    case R16G16B16A16_FLOAT: return "R16G16B16A16_FLOAT";
+    case R8_UNORM: return "R8_UNORM";
+    case R8G8_UNORM: return "R8G8_UNORM";
+    case BC1_UNORM: return "BC1_UNORM";
+    case BC3_UNORM: return "BC3_UNORM";
+    case BC7_UNORM: return "BC7_UNORM";
+    case UNKNOWN: return "UNKNOWN";
+    default: return "UNKNOWN";
+  }
+}
+
+// nsImage implementation
 
 nsImage::nsImage() = default;
 
@@ -115,7 +155,18 @@ void nsImage::AllocateImageData(nsImageFormat::Enum format, nsUInt32 uiWidth, ns
     nsUInt32 w = GetMipDimension(uiWidth, mip);
     nsUInt32 h = GetMipDimension(uiHeight, mip);
     nsUInt32 d = GetMipDimension(uiDepth, mip);
-    uiTotalSize += static_cast<nsUInt64>(w) * h * d * bpp * m_uiNumFaces * m_uiNumArrayIndices;
+    if (bpp > 0)
+    {
+      uiTotalSize += static_cast<nsUInt64>(w) * h * d * bpp * m_uiNumFaces * m_uiNumArrayIndices;
+    }
+    else
+    {
+      // Block compressed: 4x4 blocks
+      nsUInt32 bw = (w + 3) / 4;
+      nsUInt32 bh = (h + 3) / 4;
+      nsUInt32 blockSize = (format == nsImageFormat::BC1_UNORM) ? 8 : 16;
+      uiTotalSize += static_cast<nsUInt64>(bw) * bh * d * blockSize * m_uiNumFaces * m_uiNumArrayIndices;
+    }
   }
 
   m_Data.SetCountUninitialized(static_cast<nsUInt32>(uiTotalSize));
@@ -125,6 +176,25 @@ void nsImage::ResetAndAlloc(nsImageFormat::Enum format, nsUInt32 uiWidth, nsUInt
 {
   m_Data.Clear();
   AllocateImageData(format, uiWidth, uiHeight, uiDepth, uiMipLevels);
+}
+
+void nsImage::ResetAndMove(nsImage&& other)
+{
+  *this = std::move(other);
+}
+
+nsResult nsImage::Convert(nsImageFormat::Enum targetFormat)
+{
+  if (m_Format == targetFormat)
+    return NS_SUCCESS;
+
+  nsImage converted;
+  nsResult res = nsImageConversion::Convert(*this, converted, targetFormat);
+  if (res.Succeeded())
+  {
+    *this = std::move(converted);
+  }
+  return res;
 }
 
 nsResult nsImage::LoadFrom(nsStringView sPath)
@@ -153,6 +223,38 @@ void* nsImage::GetPixelPointer(nsUInt32 uiMipLevel, nsUInt32 uiFace, nsUInt32 ui
     return nullptr;
 
   return m_Data.GetData();
+}
+
+const void* nsImage::GetPixelPointer(nsUInt32 uiMipLevel, nsUInt32 uiFace, nsUInt32 uiArrayIndex, nsUInt32 x, nsUInt32 y) const
+{
+  if (m_Data.IsEmpty())
+    return nullptr;
+
+  nsUInt32 bpp = GetBytesPerPixel(m_Format);
+  if (bpp == 0)
+    return m_Data.GetData();
+
+  nsUInt64 offset = (static_cast<nsUInt64>(y) * GetMipDimension(m_uiWidth, uiMipLevel) + x) * bpp;
+  if (offset >= m_Data.GetCount())
+    return m_Data.GetData();
+
+  return m_Data.GetData() + offset;
+}
+
+void* nsImage::GetPixelPointer(nsUInt32 uiMipLevel, nsUInt32 uiFace, nsUInt32 uiArrayIndex, nsUInt32 x, nsUInt32 y)
+{
+  if (m_Data.IsEmpty())
+    return nullptr;
+
+  nsUInt32 bpp = GetBytesPerPixel(m_Format);
+  if (bpp == 0)
+    return m_Data.GetData();
+
+  nsUInt64 offset = (static_cast<nsUInt64>(y) * GetMipDimension(m_uiWidth, uiMipLevel) + x) * bpp;
+  if (offset >= m_Data.GetCount())
+    return m_Data.GetData();
+
+  return m_Data.GetData() + offset;
 }
 
 nsUInt32 nsImage::GetWidth(nsUInt32 uiMipLevel) const
@@ -208,4 +310,14 @@ nsUInt64 nsImage::GetDepthPitch(nsUInt32 uiMipLevel) const
 nsUInt64 nsImage::GetDataSize() const
 {
   return m_Data.GetCount();
+}
+
+nsByteBlobPtr nsImage::GetByteBlobPtr()
+{
+  return nsByteBlobPtr(m_Data.GetData(), m_Data.GetCount());
+}
+
+nsConstByteBlobPtr nsImage::GetByteBlobPtr() const
+{
+  return nsConstByteBlobPtr(m_Data.GetData(), m_Data.GetCount());
 }
