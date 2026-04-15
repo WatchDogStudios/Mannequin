@@ -41,6 +41,8 @@ endif()
 
 ns_add_renderers(${PROJECT_NAME})
 
-add_dependencies(${PROJECT_NAME}
-  InspectorPlugin
-)
+if(TARGET InspectorPlugin)
+  add_dependencies(${PROJECT_NAME}
+    InspectorPlugin
+  )
+endif()

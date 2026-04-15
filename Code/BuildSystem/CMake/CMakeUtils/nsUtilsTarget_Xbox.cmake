@@ -1,6 +1,6 @@
 # include CMAKEGDKXBOX, does most of the hard work for us.
-include("Code/BuildSystem/CMake/Platforms/Xbox/gxdk_xs_toolchain.cmake")
-include("Code/BuildSystem/CMake/Platforms/Xbox/CMakeGDKXbox.cmake")
+include("${CMAKE_CURRENT_LIST_DIR}/../Platforms/Xbox/gxdk_xs_toolchain.cmake")
+include("${CMAKE_CURRENT_LIST_DIR}/../Platforms/Xbox/CMakeGDKXbox.cmake")
 
 function(ns_xboxseries_add_target_configurations TARGET_NAME)
     if(NS_GDKX_BUILDFOR_XBOX_SERIES_X)

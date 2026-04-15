@@ -417,6 +417,20 @@ macro(ns_requires_desktop)
 endmacro()
 
 # #####################################
+# ## ns_requires_bc7enc_rdo()
+# #####################################
+macro(ns_requires_bc7enc_rdo)
+	ns_requires(NS_USE_BC7ENC)
+endmacro()
+
+# #####################################
+# ## ns_requires_assimp()
+# #####################################
+macro(ns_requires_assimp)
+	ns_requires(NS_USE_ASSIMP)
+endmacro()
+
+# #####################################
 # ## ns_requires_editor()
 # #####################################
 macro(ns_requires_editor)

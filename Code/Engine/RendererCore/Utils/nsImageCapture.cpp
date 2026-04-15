@@ -3,13 +3,22 @@
 
 #include "nsImageCapture.h"
 
-// stb_image_write for PNG output
+// Temporarily undefine engine DLL macro to compile stb as static implementations
+// within RendererCore rather than importing from the stb_image DLL
+// (which was compiled with STBI_WRITE_NO_STDIO, lacking file I/O functions we need)
+#pragma push_macro("BUILDSYSTEM_COMPILE_ENGINE_AS_DLL")
+#undef BUILDSYSTEM_COMPILE_ENGINE_AS_DLL
+
 #define STB_IMAGE_WRITE_IMPLEMENTATION
 #include <stb_image_write.h>
 
-// stb_image for PNG input
 #define STB_IMAGE_IMPLEMENTATION
+#define STBI_ONLY_PNG
+#define STBI_ONLY_JPEG
+#define STBI_ONLY_HDR
 #include <stb_image.h>
+
+#pragma pop_macro("BUILDSYSTEM_COMPILE_ENGINE_AS_DLL")
 
 void nsCapturedImage::GetPixelFloat(uint32_t x, uint32_t y, float outRGBA[4]) const
 {
