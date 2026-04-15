@@ -1,5 +1,9 @@
 ns_cmake_init()
 
+if(NOT TARGET TestFramework)
+  return()
+endif()
+
 
 
 

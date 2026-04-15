@@ -4,6 +4,7 @@
 # Note: Directories without CMakeLists.txt (DirectXCompiler, DirectXMath, Perforce, VHACD) are header-only or prebuilt.
 
 add_subdirectory(enet)
+add_subdirectory(GPUDetect)
 add_subdirectory(lz4)
 add_subdirectory(mikktspace)
 add_subdirectory(stb)

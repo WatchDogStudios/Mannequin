@@ -47,7 +47,7 @@ macro(ns_create_target_cs TYPE TARGET_NAME)
 	source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES ${ALL_SOURCE_FILES})
 
 	# default C# settings
-	target_compile_options(${TARGET_NAME} PRIVATE "/langversion:default")
+	target_compile_options(${TARGET_NAME} PRIVATE "/langversion:latest")
 
 	# setting this turns the app into a "Windows" application, not a "Console" application
 	# use ns_make_windowapp if this is desired

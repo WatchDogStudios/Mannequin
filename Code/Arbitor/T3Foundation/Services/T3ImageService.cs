@@ -3,6 +3,7 @@
  *   All rights reserved.
  */
 
+using System;
 using System.IO;
 using System.Windows.Media.Imaging;
 
@@ -17,7 +18,7 @@ namespace T3Foundation.Services
     /// <summary>
     /// Load an image from disk as a WPF BitmapImage.
     /// </summary>
-    public static BitmapImage? LoadImage(string path)
+    public static BitmapImage LoadImage(string path)
     {
       if (string.IsNullOrEmpty(path) || !File.Exists(path))
         return null;
@@ -42,8 +43,8 @@ namespace T3Foundation.Services
     /// <summary>
     /// Load test, reference, and diff images for side-by-side comparison.
     /// </summary>
-    public static (BitmapImage? Test, BitmapImage? Reference, BitmapImage? Diff) LoadComparisonSet(
-      string? testPath, string? refPath, string? diffPath)
+    public static (BitmapImage Test, BitmapImage Reference, BitmapImage Diff) LoadComparisonSet(
+      string testPath, string refPath, string diffPath)
     {
       return (
         testPath != null ? LoadImage(testPath) : null,

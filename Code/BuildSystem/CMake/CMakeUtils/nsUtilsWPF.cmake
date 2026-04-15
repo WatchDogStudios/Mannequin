@@ -89,42 +89,47 @@ function(ns_target_wpf_prequesites PROJECT_NAME)
         target_link_libraries(${PROJECT_NAME} PRIVATE ${REFERENCE})
     endforeach()
 
-    # Add references to Syncfusion assemblies
-    foreach(REFERENCE ${SYNCFUSION_REFERENCES})
-        set(ASSEMBLY_PATH "${PACKAGES_DIR}/${REFERENCE}.${SYNCFUSION_VERSION}/lib/net462/${REFERENCE}.dll")
+    # Syncfusion support — only if NS_SYNCFUSION_DIR is set and exists
+    if(NS_SYNCFUSION_DIR AND EXISTS "${NS_SYNCFUSION_DIR}")
+        # Add references to Syncfusion assemblies
+        foreach(REFERENCE ${SYNCFUSION_REFERENCES})
+            set(ASSEMBLY_PATH "${PACKAGES_DIR}/${REFERENCE}.${SYNCFUSION_VERSION}/lib/net462/${REFERENCE}.dll")
 
-        target_link_libraries(${PROJECT_NAME} PRIVATE ${ASSEMBLY_PATH})
+            target_link_libraries(${PROJECT_NAME} PRIVATE ${ASSEMBLY_PATH})
 
-        set_target_properties(${PROJECT_NAME} PROPERTIES 
-        VS_DOTNET_REFERENCES_COPY_LOCAL ON
-        VS_DOTNET_REFERENCE "${PACKAGES_DIR}/${REFERENCE}.${SYNCFUSION_VERSION}/lib/net462/${REFERENCE}.dll"
+            set_target_properties(${PROJECT_NAME} PROPERTIES 
+            VS_DOTNET_REFERENCES_COPY_LOCAL ON
+            VS_DOTNET_REFERENCE "${PACKAGES_DIR}/${REFERENCE}.${SYNCFUSION_VERSION}/lib/net462/${REFERENCE}.dll"
+            )
+        endforeach()
+        message(NOTICE "Globbing All Syncfusion DLLs in: ${NS_SYNCFUSION_DIR}/${SYNCFUSION_VERSION}/Assemblies/4.6.2")
+        
+        message(NOTICE "Syncfusion SkinManager Binary: ${NS_SYNCFUSION_DIR}/${SYNCFUSION_VERSION}/Assemblies/4.6.2/Syncfusion.SfSkinManager.WPF.dll")
+
+        # Set properties for satellite assemblies and output
+        set_target_properties(${PROJECT_NAME} PROPERTIES
+            VS_DOTNET_REFERENCES_COPY_LOCAL ON
+            VS_DOTNET_REFERENCE_Syncfusion.SfSkinManager.WPF "${NS_SYNCFUSION_DIR}/${SYNCFUSION_VERSION}/Assemblies/4.6.2/Syncfusion.SfSkinManager.WPF.dll"
+            VS_DOTNET_REFERENCE_Syncfusion.Shared.WPF "${PACKAGES_DIR}/Syncfusion.Shared.WPF.${SYNCFUSION_VERSION}/lib/net462/Syncfusion.Shared.WPF.dll"
+            VS_DOTNET_REFERENCE_Syncfusion.Tools.WPF "${PACKAGES_DIR}/Syncfusion.Tools.WPF.${SYNCFUSION_VERSION}/lib/net462/Syncfusion.Tools.WPF.dll"
         )
-    endforeach()
-    message(NOTICE "Globbing All Syncfusion DLLs in: ${NS_SYNCFUSION_DIR}/${SYNCFUSION_VERSION}/Assemblies/4.6.2")
-    
-    message(NOTICE "Syncfusion SkinManager Binary: ${NS_SYNCFUSION_DIR}/${SYNCFUSION_VERSION}/Assemblies/4.6.2/Syncfusion.SfSkinManager.WPF.dll")
 
-    # Set properties for satellite assemblies and output
-    set_target_properties(${PROJECT_NAME} PROPERTIES
-        VS_DOTNET_REFERENCES_COPY_LOCAL ON
-        VS_DOTNET_REFERENCE_Syncfusion.SfSkinManager.WPF "${NS_SYNCFUSION_DIR}/${SYNCFUSION_VERSION}/Assemblies/4.6.2/Syncfusion.SfSkinManager.WPF.dll"
-        VS_DOTNET_REFERENCE_Syncfusion.Shared.WPF "${PACKAGES_DIR}/Syncfusion.Shared.WPF.${SYNCFUSION_VERSION}/lib/net462/Syncfusion.Shared.WPF.dll"
-        VS_DOTNET_REFERENCE_Syncfusion.Tools.WPF "${PACKAGES_DIR}/Syncfusion.Tools.WPF.${SYNCFUSION_VERSION}/lib/net462/Syncfusion.Tools.WPF.dll"
-    )
+        # Add All Libs from Syncfusion in case cmake is stupid.
+        # Find all DLL files in the specified directory
+        file(GLOB SYNCFUSION_DLLS "${NS_SYNCFUSION_DIR}/${SYNCFUSION_VERSION}/Assemblies/4.6.2/Syncfusion.*.*.dll")
 
-    # Add All Libs from Syncfusion in case cmake is stupid.
-    # Find all DLL files in the specified directory
-    file(GLOB SYNCFUSION_DLLS "${NS_SYNCFUSION_DIR}/${SYNCFUSION_VERSION}/Assemblies/4.6.2/Syncfusion.*.*.dll")
+        # Loop through each DLL file
+        foreach(dll ${SYNCFUSION_DLLS})
+            message(NOTICE "Adding Syncfusion DLL: ${dll}")
+            # Get the library name from the file name
+            # Add the DLL as a library
+            target_link_libraries(${PROJECT_NAME} PUBLIC ${dll})
+            set_target_properties(${PROJECT_NAME} PROPERTIES IMPORTED_LOCATION ${dll})
 
-    # Loop through each DLL file
-    foreach(dll ${SYNCFUSION_DLLS})
-        message(NOTICE "Adding Syncfusion DLL: ${dll}")
-        # Get the library name from the file name
-        # Add the DLL as a library
-        target_link_libraries(${PROJECT_NAME} PUBLIC ${dll})
-        set_target_properties(${PROJECT_NAME} PROPERTIES IMPORTED_LOCATION ${dll})
-
-        # Add as .NET reference (assumes you are using C# or similar)
-        set_target_properties(${PROJECT_NAME} PROPERTIES VS_DOTNET_REFERENCE ${dll})
-    endforeach()
+            # Add as .NET reference (assumes you are using C# or similar)
+            set_target_properties(${PROJECT_NAME} PROPERTIES VS_DOTNET_REFERENCE ${dll})
+        endforeach()
+    else()
+        message(STATUS "Syncfusion SDK not found — building ${PROJECT_NAME} without Syncfusion controls")
+    endif()
 endfunction(ns_target_wpf_prequesites)

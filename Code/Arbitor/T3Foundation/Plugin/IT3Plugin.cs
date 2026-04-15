@@ -4,10 +4,14 @@
  *   You are only allowed access to this code, if given WRITTEN permission by Watch Dogs LLC.
  */
 
+using System;
+using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using System.ComponentModel.Composition.Hosting;
 using System.Configuration;
 using System.IO;
+using System.Linq;
+using System.Windows.Controls;
 namespace T3Foundation
 {
   /// <summary>

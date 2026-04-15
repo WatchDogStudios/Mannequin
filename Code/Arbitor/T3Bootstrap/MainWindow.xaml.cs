@@ -1,7 +1,9 @@
-using Syncfusion.SfSkinManager;
 using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
@@ -21,13 +23,13 @@ namespace T3
     public bool Passed { get; set; }
     public double MeanError { get; set; }
     public string MeanErrorText => MeanError > 0 ? $"(err: {MeanError:F4})" : "";
-    public T3VisualTestResult? Result { get; set; }
+    public T3VisualTestResult Result { get; set; }
 
     public Brush StatusColor => Result == null ? Brushes.Gray :
       (Result.Passed ? Brushes.LimeGreen :
       (Result.RenderSucceeded ? Brushes.OrangeRed : Brushes.Red));
 
-    public event PropertyChangedEventHandler? PropertyChanged;
+    public event PropertyChangedEventHandler PropertyChanged;
     public void Refresh() => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(""));
   }
 
@@ -36,25 +38,14 @@ namespace T3
   /// </summary>
   public partial class MainWindow : Window
   {
-    private readonly T3TestRunnerService _testRunner = new();
-    private readonly ObservableCollection<TestListItem> _testItems = new();
-    private readonly ObservableCollection<string> _logMessages = new();
-    private T3VisualTestSummary? _lastSummary;
-    private CancellationTokenSource? _cts;
+    private readonly T3TestRunnerService _testRunner = new T3TestRunnerService();
+    private readonly ObservableCollection<TestListItem> _testItems = new ObservableCollection<TestListItem>();
+    private readonly ObservableCollection<string> _logMessages = new ObservableCollection<string>();
+    private T3VisualTestSummary _lastSummary;
+    private CancellationTokenSource _cts;
 
     public MainWindow()
     {
-      // Theme initialization
-      string style = "basetheme";
-      SkinHelper? styleInstance = null;
-      var skinHelpterStr = "Syncfusion.Themes." + style + ".WPF." + style + "SkinHelper, Syncfusion.Themes." + style + ".WPF";
-      Type? skinHelpterType = Type.GetType(skinHelpterStr);
-      if (skinHelpterType != null)
-        styleInstance = Activator.CreateInstance(skinHelpterType) as SkinHelper;
-      if (styleInstance != null)
-        SfSkinManager.RegisterTheme("basetheme", styleInstance);
-      SfSkinManager.SetTheme(this, new Theme("basetheme;MaterialDark"));
-
       InitializeComponent();
 
       // Bind collections
@@ -220,7 +211,7 @@ namespace T3
 
     // --- Core Logic ---
 
-    private async Task RunTests(string? filter)
+    private async Task RunTests(string filter)
     {
       string api = GetSelectedAPI();
       var apis = api == "All APIs"

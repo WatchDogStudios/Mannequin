@@ -1,8 +1,8 @@
-global using System;
-global using System.Collections.Generic;
-global using System.Linq;
-global using System.Windows;
-global using System.Windows.Controls;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Windows;
+using System.Windows.Controls;
 
 namespace T3Foundation
 {
@@ -12,13 +12,13 @@ namespace T3Foundation
   /// </summary>
   public static class T3Core
   {
-    private static readonly List<string> s_LogMessages = new();
-    private static readonly object s_LogLock = new();
+    private static readonly List<string> s_LogMessages = new List<string>();
+    private static readonly object s_LogLock = new object();
 
     /// <summary>
     /// Event raised when a new log message is added.
     /// </summary>
-    public static event Action<string, T3LogLevel>? OnLogMessage;
+    public static event Action<string, T3LogLevel> OnLogMessage;
 
     /// <summary>
     /// Initialize the T3 Framework core services.

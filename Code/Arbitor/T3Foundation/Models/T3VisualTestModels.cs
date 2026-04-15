@@ -3,8 +3,9 @@
  *   All rights reserved.
  */
 
-using System.Text.Json;
-using System.Text.Json.Serialization;
+using System;
+using System.Collections.Generic;
+using Newtonsoft.Json;
 
 namespace T3Foundation.Models
 {
@@ -14,47 +15,47 @@ namespace T3Foundation.Models
   /// </summary>
   public class T3VisualTestResult
   {
-    [JsonPropertyName("testName")]
+    [JsonProperty("testName")]
     public string TestName { get; set; } = "";
 
-    [JsonPropertyName("api")]
+    [JsonProperty("api")]
     public string API { get; set; } = "";
 
-    [JsonPropertyName("passed")]
+    [JsonProperty("passed")]
     public bool Passed { get; set; }
 
-    [JsonPropertyName("renderSucceeded")]
+    [JsonProperty("renderSucceeded")]
     public bool RenderSucceeded { get; set; }
 
-    [JsonPropertyName("referenceExists")]
+    [JsonProperty("referenceExists")]
     public bool ReferenceExists { get; set; }
 
-    [JsonPropertyName("renderTimeMs")]
+    [JsonProperty("renderTimeMs")]
     public double RenderTimeMs { get; set; }
 
-    [JsonPropertyName("meanError")]
+    [JsonProperty("meanError")]
     public double MeanError { get; set; }
 
-    [JsonPropertyName("maxError")]
+    [JsonProperty("maxError")]
     public double MaxError { get; set; }
 
-    [JsonPropertyName("medianError")]
+    [JsonProperty("medianError")]
     public double MedianError { get; set; }
 
-    [JsonPropertyName("p95Error")]
+    [JsonProperty("p95Error")]
     public double P95Error { get; set; }
 
-    [JsonPropertyName("pixelsFailed")]
+    [JsonProperty("pixelsFailed")]
     public uint PixelsFailed { get; set; }
 
-    [JsonPropertyName("totalPixels")]
+    [JsonProperty("totalPixels")]
     public uint TotalPixels { get; set; }
 
-    [JsonPropertyName("failurePercentage")]
+    [JsonProperty("failurePercentage")]
     public double FailurePercentage { get; set; }
 
-    [JsonPropertyName("error")]
-    public string? ErrorMessage { get; set; }
+    [JsonProperty("error")]
+    public string ErrorMessage { get; set; }
 
     /// <summary>
     /// Status string for UI display.
@@ -68,36 +69,36 @@ namespace T3Foundation.Models
   /// </summary>
   public class T3VisualTestSummary
   {
-    [JsonPropertyName("totalTests")]
+    [JsonProperty("totalTests")]
     public uint TotalTests { get; set; }
 
-    [JsonPropertyName("passed")]
+    [JsonProperty("passed")]
     public uint PassedCount { get; set; }
 
-    [JsonPropertyName("failed")]
+    [JsonProperty("failed")]
     public uint FailedCount { get; set; }
 
-    [JsonPropertyName("skipped")]
+    [JsonProperty("skipped")]
     public uint SkippedCount { get; set; }
 
-    [JsonPropertyName("newBaselines")]
+    [JsonProperty("newBaselines")]
     public uint NewBaselines { get; set; }
 
-    [JsonPropertyName("totalTimeMs")]
+    [JsonProperty("totalTimeMs")]
     public double TotalTimeMs { get; set; }
 
-    [JsonPropertyName("results")]
-    public List<T3VisualTestResult> Results { get; set; } = new();
+    [JsonProperty("results")]
+    public List<T3VisualTestResult> Results { get; set; } = new List<T3VisualTestResult>();
 
     /// <summary>
     /// Parse from JSON file exported by the C++ test runner.
     /// </summary>
-    public static T3VisualTestSummary? LoadFromJson(string path)
+    public static T3VisualTestSummary LoadFromJson(string path)
     {
       try
       {
         string json = System.IO.File.ReadAllText(path);
-        return JsonSerializer.Deserialize<T3VisualTestSummary>(json);
+        return JsonConvert.DeserializeObject<T3VisualTestSummary>(json);
       }
       catch (Exception ex)
       {

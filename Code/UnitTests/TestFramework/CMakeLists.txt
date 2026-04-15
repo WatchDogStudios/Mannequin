@@ -1,5 +1,10 @@
 ns_cmake_init()
 
+# Texture library required but may not be available
+if(NOT TARGET Texture)
+  return()
+endif()
+
 # Get the name of this folder as the project name
 get_filename_component(PROJECT_NAME ${CMAKE_CURRENT_SOURCE_DIR} NAME_WE)
 

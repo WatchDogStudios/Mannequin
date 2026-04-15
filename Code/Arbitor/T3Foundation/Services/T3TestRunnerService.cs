@@ -3,8 +3,12 @@
  *   All rights reserved.
  */
 
+using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Threading;
+using System.Threading.Tasks;
 using T3Foundation.Models;
 
 namespace T3Foundation.Services
@@ -18,22 +22,22 @@ namespace T3Foundation.Services
     private string _testRunnerPath = "";
     private string _referenceImageDir = "";
     private string _outputDir = "";
-    private Process? _runningProcess;
+    private Process _runningProcess;
 
     /// <summary>
     /// Event raised when a test run completes.
     /// </summary>
-    public event Action<T3VisualTestSummary>? OnTestRunComplete;
+    public event Action<T3VisualTestSummary> OnTestRunComplete;
 
     /// <summary>
     /// Event raised with real-time stdout/stderr output from the test runner.
     /// </summary>
-    public event Action<string>? OnTestOutput;
+    public event Action<string> OnTestOutput;
 
     /// <summary>
     /// Event raised when test run progress updates (0.0 to 1.0).
     /// </summary>
-    public event Action<double, string>? OnProgressUpdate;
+    public event Action<double, string> OnProgressUpdate;
 
     /// <summary>
     /// Whether a test run is currently active.
@@ -53,9 +57,9 @@ namespace T3Foundation.Services
     /// <summary>
     /// Run visual tests for specified APIs asynchronously.
     /// </summary>
-    public async Task<T3VisualTestSummary?> RunTestsAsync(
+    public async Task<T3VisualTestSummary> RunTestsAsync(
       IEnumerable<string> apis,
-      string? filter = null,
+      string filter = null,
       bool updateBaselines = false,
       CancellationToken cancellationToken = default)
     {
@@ -130,7 +134,7 @@ namespace T3Foundation.Services
         _runningProcess.BeginOutputReadLine();
         _runningProcess.BeginErrorReadLine();
 
-        await _runningProcess.WaitForExitAsync(cancellationToken);
+        await Task.Run(() => _runningProcess.WaitForExit(), cancellationToken);
 
         T3Core.Log($"Test runner exited with code {_runningProcess.ExitCode}", T3LogLevel.Info);
 
@@ -172,7 +176,7 @@ namespace T3Foundation.Services
       {
         try
         {
-          _runningProcess.Kill(entireProcessTree: true);
+          _runningProcess.Kill();
           T3Core.Log("Test run aborted.", T3LogLevel.Warning);
         }
         catch (Exception ex)
@@ -185,7 +189,7 @@ namespace T3Foundation.Services
     /// <summary>
     /// Get paths to comparison images for a specific test.
     /// </summary>
-    public (string? TestImage, string? ReferenceImage, string? DiffImage) GetComparisonImages(
+    public (string TestImage, string ReferenceImage, string DiffImage) GetComparisonImages(
       string apiName, string testName)
     {
       string basePath = Path.Combine(_outputDir, apiName, testName);

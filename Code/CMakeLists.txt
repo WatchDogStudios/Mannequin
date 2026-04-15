@@ -46,6 +46,9 @@ ns_write_configuration_txt()
 # ThirdParty
 add_subdirectory(ThirdParty)
 
+# Foundation (core framework library)
+add_subdirectory(Foundation)
+
 # Core Engine
 if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/Engine/CMakeLists.txt")
   add_subdirectory(Engine)

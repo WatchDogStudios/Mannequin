@@ -5,7 +5,6 @@ get_filename_component(PROJECT_NAME ${CMAKE_CURRENT_SOURCE_DIR} NAME_WE)
 
 ns_create_target_cs(APPLICATION ${PROJECT_NAME})
 
-get_cmake_property(BASETHEME ArbitorThemeBase)
 
 
 include(CSharpUtilities)
@@ -36,9 +35,7 @@ target_link_libraries(${PROJECT_NAME} PUBLIC T3Foundation)
 
 ns_target_wpf_prequesites(${PROJECT_NAME})
 
-message(NOTICE "ArbitorTheme: Base: ${BASETHEME}")
 set_property(TARGET ${PROJECT_NAME} PROPERTY VS_DOTNET_REFERENCES
-  "${BASETHEME}"
 	"Microsoft.CSharp"
 	"PresentationCore"
 	"PresentationFramework"
@@ -50,9 +47,7 @@ set_property(TARGET ${PROJECT_NAME} PROPERTY VS_DOTNET_REFERENCES
 	"System.Xaml"
 	"System.Xml"
 	"System.Xml.Linq"
-	"Microsoft.CSharp"
 	"System.Drawing"
 	"System.Windows.Forms"
 	"System.ComponentModel.Composition"
-	"System.ComponentModel.Composition.Hosting"
 	"WindowsBase")

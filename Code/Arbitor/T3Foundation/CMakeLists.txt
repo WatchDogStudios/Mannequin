@@ -10,11 +10,7 @@ set_property(TARGET ${target} PROPERTY DOTNET_TARGET_FRAMEWORK "net8.0")
 ns_create_target_cs(LIBRARY ${PROJECT_NAME})
 
 
-get_cmake_property(BASETHEME ArbitorThemeBase)
-
-
 ns_target_wpf_prequesites(${PROJECT_NAME})
-message(NOTICE "ArbitorTheme: Base: ${BASETHEME}")
 include(CSharpUtilities)
 
 csharp_set_designer_cs_properties(
@@ -25,7 +21,6 @@ csharp_set_designer_cs_properties(
 	Properties/Settings.settings)
 
 set_property(TARGET ${PROJECT_NAME} PROPERTY VS_DOTNET_REFERENCES
-  	"${BASETHEME}"
 	"Microsoft.CSharp"
 	"PresentationCore"
 	"PresentationFramework"
@@ -37,16 +32,11 @@ set_property(TARGET ${PROJECT_NAME} PROPERTY VS_DOTNET_REFERENCES
 	"System.Xaml"
 	"System.Xml"
 	"System.Xml.Linq"
-	"Microsoft.VisualStudio.Composition"
-	"Microsoft.VisualStudio.Composition.Analyzers"
-	"Microsoft.VisualStudio.Composition.AppHost"
-	"${CMAKE_CURRENT_BINARY_DIR}/packages/FontAwesome5.2.1.11/lib/net462/FontAwesome5.dll"
-	"${CMAKE_CURRENT_BINARY_DIR}/packages/CommunityToolkit.Mvvm.8.2.2/lib/netstandard2.0/CommunityToolkit.Mvvm.dll"
-	"${CMAKE_CURRENT_BINARY_DIR}/packages/AdonisUI.1.17.1/lib/net45/AdonisUI.dll"
-	"CommunityToolkit.Mvvm"
-	"Dirkster.AvalonDock"
 	"System.ComponentModel.Composition"
+	"${CMAKE_CURRENT_BINARY_DIR}/packages/Newtonsoft.Json.13.0.3/lib/net45/Newtonsoft.Json.dll"
 	"WindowsBase")
+
+ns_nuget_init()
 
 add_custom_command(TARGET ${PROJECT_NAME}
 	PRE_BUILD
