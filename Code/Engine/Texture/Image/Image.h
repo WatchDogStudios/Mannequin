@@ -19,6 +19,7 @@ struct NS_TEXTURE_DLL nsImageFormat
     R16G16B16A16_FLOAT,
     R8_UNORM,
     R8G8_UNORM,
+    R8G8B8_UNORM,
     BC1_UNORM,
     BC3_UNORM,
     BC7_UNORM,
@@ -105,6 +106,9 @@ public:
   /// Access raw data as a blob pointer
   nsByteBlobPtr GetByteBlobPtr();
   nsConstByteBlobPtr GetByteBlobPtr() const;
+
+  /// Get a sub-image view (lightweight reference into this image for a specific mip/face/array)
+  nsImage GetSubImageView(nsUInt32 uiMipLevel = 0, nsUInt32 uiFace = 0, nsUInt32 uiArrayIndex = 0) const;
 
 private:
   nsUInt32 m_uiWidth = 0;

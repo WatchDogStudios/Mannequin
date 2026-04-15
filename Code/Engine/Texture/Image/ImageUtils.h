@@ -42,4 +42,16 @@ public:
     nsUInt32 uiMSE, nsUInt32 uiMSEThreshold,
     nsUInt32 uiMinDiffRgb, nsUInt32 uiMaxDiffRgb,
     nsUInt32 uiMinDiffAlpha, nsUInt32 uiMaxDiffAlpha);
+
+  /// Compute absolute difference image with relaxed tolerance
+  static void ComputeImageDifferenceABSRelaxed(const nsImage& imageA, const nsImage& imageB, nsImage& ref_diff);
+
+  /// Normalize image pixel values to [0, 255] range
+  static void Normalize(nsImage& inout_image);
+
+  /// Normalize image pixel values and output min/max differences per channel
+  static void Normalize(nsImage& inout_image, nsUInt8& out_uiMinDiffRgb, nsUInt8& out_uiMaxDiffRgb, nsUInt8& out_uiMinDiffAlpha, nsUInt8& out_uiMaxDiffAlpha);
+
+  /// Extract the alpha channel into a separate grayscale image
+  static void ExtractAlphaChannel(const nsImage& source, nsImage& ref_alpha);
 };

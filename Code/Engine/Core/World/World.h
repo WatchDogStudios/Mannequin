@@ -62,6 +62,18 @@ struct nsGameObjectDesc
 
 class nsWorld;
 
+/// \brief Enum for message queue types.
+struct nsObjectMsgQueueType
+{
+  enum Enum
+  {
+    NextFrame,
+    PostAsync,
+    PostTransform,
+    AfterInitialized,
+  };
+};
+
 /// \brief Iterator for child objects.
 class NS_CORE_DLL nsGameObjectChildIterator
 {
@@ -124,18 +136,6 @@ public:
 
 private:
   friend class nsWorld;
-};
-
-/// \brief Enum for message queue types.
-struct nsObjectMsgQueueType
-{
-  enum Enum
-  {
-    NextFrame,
-    PostAsync,
-    PostTransform,
-    AfterInitialized,
-  };
 };
 
 /// \brief Base class for all world modules.

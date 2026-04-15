@@ -341,18 +341,18 @@ void nsTestFramework::GetTestSettingsFromCommandLine(const nsCommandLineUtils& c
 
   if (opt_Json.IsOptionSpecified(nullptr, &cmd))
   {
-    m_Settings.m_sJsonOutput = opt_Json.GetOptionValue(nsCommandLineOption::LogMode::AlwaysIfSpecified, &cmd);
+    m_Settings.m_sJsonOutput = opt_Json.GetOptionValue(nsCommandLineOption::LogMode::AlwaysIfSpecified, &cmd).GetData();
   }
 
   if (opt_OutputDir.IsOptionSpecified(nullptr, &cmd))
   {
-    m_sAbsTestOutputDir = opt_OutputDir.GetOptionValue(nsCommandLineOption::LogMode::AlwaysIfSpecified, &cmd);
+    m_sAbsTestOutputDir = opt_OutputDir.GetOptionValue(nsCommandLineOption::LogMode::AlwaysIfSpecified, &cmd).GetData();
   }
 
   bool bNoAutoSave = false;
   if (opt_OrderFile.IsOptionSpecified(nullptr, &cmd))
   {
-    m_sAbsTestOrderFilePath = opt_OrderFile.GetOptionValue(nsCommandLineOption::LogMode::Always);
+    m_sAbsTestOrderFilePath = opt_OrderFile.GetOptionValue(nsCommandLineOption::LogMode::Always).GetData();
     // If a custom order file was provided, default to -nosave as to not overwrite that file with additional
     // parameters from command line. Use "-nosave false" to explicitly enable auto save in this case.
     bNoAutoSave = true;
@@ -364,7 +364,7 @@ void nsTestFramework::GetTestSettingsFromCommandLine(const nsCommandLineUtils& c
 
   if (opt_SettingsFile.IsOptionSpecified(nullptr, &cmd))
   {
-    m_sAbsTestSettingsFilePath = opt_SettingsFile.GetOptionValue(nsCommandLineOption::LogMode::Always);
+    m_sAbsTestSettingsFilePath = opt_SettingsFile.GetOptionValue(nsCommandLineOption::LogMode::Always).GetData();
     // If a custom settings file was provided, default to -nosave as to not overwrite that file with additional
     // parameters from command line. Use "-nosave false" to explicitly enable auto save in this case.
     bNoAutoSave = true;

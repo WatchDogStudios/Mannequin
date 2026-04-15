@@ -8,7 +8,12 @@
 class nsShaderResource;
 
 template <typename T>
-class nsTypedResourceHandle;
+class nsTypedResourceHandle
+{
+public:
+  nsTypedResourceHandle() = default;
+  bool IsValid() const { return false; }
+};
 
 using nsShaderResourceHandle = nsTypedResourceHandle<nsShaderResource>;
 

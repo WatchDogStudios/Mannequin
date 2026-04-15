@@ -82,6 +82,71 @@ void nsImageUtils::CreateSolidColorImage(nsImage& ref_image, nsUInt32 uiWidth, n
   }
 }
 
+void nsImageUtils::ComputeImageDifferenceABSRelaxed(const nsImage& imageA, const nsImage& imageB, nsImage& ref_diff)
+{
+  // Relaxed version — same as ABS for now
+  ComputeImageDifferenceABS(imageA, imageB, ref_diff);
+}
+
+void nsImageUtils::Normalize(nsImage& inout_image)
+{
+  nsUInt8 minRgb, maxRgb, minAlpha, maxAlpha;
+  Normalize(inout_image, minRgb, maxRgb, minAlpha, maxAlpha);
+}
+
+void nsImageUtils::Normalize(nsImage& inout_image, nsUInt8& out_uiMinDiffRgb, nsUInt8& out_uiMaxDiffRgb, nsUInt8& out_uiMinDiffAlpha, nsUInt8& out_uiMaxDiffAlpha)
+{
+  out_uiMinDiffRgb = 255;
+  out_uiMaxDiffRgb = 0;
+  out_uiMinDiffAlpha = 255;
+  out_uiMaxDiffAlpha = 0;
+
+  if (!inout_image.IsValid())
+    return;
+
+  nsUInt8* pData = static_cast<nsUInt8*>(inout_image.GetPixelPointer());
+  nsUInt32 pixelCount = inout_image.GetWidth() * inout_image.GetHeight();
+  if (!pData || pixelCount == 0)
+    return;
+
+  // Find min/max for RGB and Alpha channels (assuming RGBA layout)
+  for (nsUInt32 i = 0; i < pixelCount; ++i)
+  {
+    nsUInt8 r = pData[i * 4 + 0];
+    nsUInt8 g = pData[i * 4 + 1];
+    nsUInt8 b = pData[i * 4 + 2];
+    nsUInt8 a = pData[i * 4 + 3];
+    nsUInt8 maxRgb = r > g ? (r > b ? r : b) : (g > b ? g : b);
+    nsUInt8 minRgb = r < g ? (r < b ? r : b) : (g < b ? g : b);
+
+    if (maxRgb > out_uiMaxDiffRgb) out_uiMaxDiffRgb = maxRgb;
+    if (minRgb < out_uiMinDiffRgb) out_uiMinDiffRgb = minRgb;
+    if (a > out_uiMaxDiffAlpha) out_uiMaxDiffAlpha = a;
+    if (a < out_uiMinDiffAlpha) out_uiMinDiffAlpha = a;
+  }
+}
+
+void nsImageUtils::ExtractAlphaChannel(const nsImage& source, nsImage& ref_alpha)
+{
+  if (!source.IsValid())
+    return;
+
+  nsUInt32 w = source.GetWidth();
+  nsUInt32 h = source.GetHeight();
+  ref_alpha.ResetAndAlloc(nsImageFormat::R8_UNORM, w, h);
+
+  const nsUInt8* pSrc = static_cast<const nsUInt8*>(source.GetPixelPointer());
+  nsUInt8* pDst = static_cast<nsUInt8*>(ref_alpha.GetPixelPointer());
+  if (!pSrc || !pDst)
+    return;
+
+  // Extract alpha channel (4th byte in RGBA)
+  for (nsUInt32 i = 0; i < w * h; ++i)
+  {
+    pDst[i] = pSrc[i * 4 + 3];
+  }
+}
+
 void nsImageUtils::CreateImageDiffHtml(nsStringBuilder& ref_html, nsStringView sTitle,
   const nsImage& expectedRgb, const nsImage& expectedAlpha,
   const nsImage& actualRgb, const nsImage& actualAlpha,

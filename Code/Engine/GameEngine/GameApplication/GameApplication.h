@@ -1,11 +1,10 @@
 #pragma once
 
 #include <GameEngine/GameEngineDLL.h>
+#include <GameEngine/GameState/GameState.h>
 #include <Foundation/Application/Application.h>
 #include <Foundation/Strings/String.h>
 #include <Foundation/Math/Transform.h>
-
-class nsGameState;
 
 /// Base class for game applications with full engine integration.
 class NS_GAMEENGINE_DLL nsGameApplication : public nsApplication

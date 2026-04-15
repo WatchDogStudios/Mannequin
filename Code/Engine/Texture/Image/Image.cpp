@@ -11,6 +11,8 @@ static nsUInt32 GetBytesPerPixel(nsImageFormat::Enum format)
       return 1;
     case nsImageFormat::R8G8_UNORM:
       return 2;
+    case nsImageFormat::R8G8B8_UNORM:
+      return 3;
     case nsImageFormat::R8G8B8A8_UNORM:
     case nsImageFormat::R8G8B8A8_UNORM_SRGB:
     case nsImageFormat::B8G8R8A8_UNORM:
@@ -320,4 +322,26 @@ nsByteBlobPtr nsImage::GetByteBlobPtr()
 nsConstByteBlobPtr nsImage::GetByteBlobPtr() const
 {
   return nsConstByteBlobPtr(m_Data.GetData(), m_Data.GetCount());
+}
+
+nsImage nsImage::GetSubImageView(nsUInt32 uiMipLevel, nsUInt32 uiFace, nsUInt32 uiArrayIndex) const
+{
+  nsImage subImage;
+  subImage.m_uiWidth = GetWidth(uiMipLevel);
+  subImage.m_uiHeight = GetHeight(uiMipLevel);
+  subImage.m_uiDepth = GetDepth(uiMipLevel);
+  subImage.m_uiMipLevels = 1;
+  subImage.m_uiNumFaces = 1;
+  subImage.m_uiNumArrayIndices = 1;
+  subImage.m_Format = m_Format;
+  // Copy relevant data
+  nsUInt64 size = static_cast<nsUInt64>(subImage.m_uiWidth) * subImage.m_uiHeight * GetBytesPerPixel(m_Format);
+  if (size > 0 && !m_Data.IsEmpty())
+  {
+    subImage.m_Data.SetCountUninitialized(static_cast<nsUInt32>(size));
+    const void* pSrc = GetPixelPointer(uiMipLevel, uiFace, uiArrayIndex);
+    if (pSrc)
+      memcpy(subImage.m_Data.GetData(), pSrc, static_cast<size_t>(size));
+  }
+  return subImage;
 }

@@ -29,7 +29,8 @@ nsTestFramework* nsTestSetup::InitTestFramework(const char* szTestName, const ch
 #endif
 
   // without a proper file system the current working directory is pretty much useless
-  std::string sTestFolder = std::string(nsOSFile::GetUserDataFolder());
+  nsStringBuilder sTmpFolder(nsOSFile::GetUserDataFolder());
+  std::string sTestFolder = std::string(sTmpFolder.GetData());
   if (*sTestFolder.rbegin() != '/')
     sTestFolder.append("/");
   sTestFolder.append("nsEngine Tests/");
