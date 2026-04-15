@@ -3,7 +3,8 @@
 // Copyright (c) WD Studios. All rights reserved.
 // Vulkan Renderer Backend for Mannequin (Stub)
 
-#include "../../Engine/RendererCore/Device/nsGALDevice.h"
+#include <RendererCore/Device/nsGALDevice.h>
+#include <vulkan/vulkan.h>
 
 /// Vulkan implementation of the graphics abstraction layer.
 /// TODO: Full implementation pending — this is the structural skeleton.

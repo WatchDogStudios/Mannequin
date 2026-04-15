@@ -24,8 +24,6 @@ target_link_libraries(${PROJECT_NAME}
     RendererCore
 )
 
-# Link Vulkan SDK
-find_package(Vulkan REQUIRED)
-target_link_libraries(${PROJECT_NAME} PRIVATE Vulkan::Vulkan)
+ns_link_target_vulkan(${PROJECT_NAME})
 
 ns_add_output_ns_prefix(${PROJECT_NAME})
