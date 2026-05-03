@@ -4,9 +4,30 @@
 #include "nsGALDeviceDX12.h"
 
 #include <d3d12sdklayers.h>
+#include <utility>
+#include <vector>
 
 #pragma comment(lib, "d3d12.lib")
 #pragma comment(lib, "dxgi.lib")
+
+namespace
+{
+  const char* ToValidationSeverity(D3D12_MESSAGE_SEVERITY severity)
+  {
+    switch (severity)
+    {
+      case D3D12_MESSAGE_SEVERITY_CORRUPTION:
+      case D3D12_MESSAGE_SEVERITY_ERROR:
+        return "Fatal";
+      case D3D12_MESSAGE_SEVERITY_WARNING:
+        return "Warning";
+      case D3D12_MESSAGE_SEVERITY_INFO:
+      case D3D12_MESSAGE_SEVERITY_MESSAGE:
+      default:
+        return "Info";
+    }
+  }
+}
 
 // --- Auto-registration ---
 static std::unique_ptr<nsGALDevice> CreateDX12Device()
@@ -85,6 +106,7 @@ nsGALResult nsGALDeviceDX12::Init(const nsGALDeviceCreationDescription& desc)
   // Create device
   if (FAILED(D3D12CreateDevice(bestAdapter.Get(), D3D_FEATURE_LEVEL_12_0, IID_PPV_ARGS(&m_pDevice))))
     return nsGALResult::Failure;
+  m_pDevice.As(&m_pInfoQueue);
 
   // Fill capabilities
   DXGI_ADAPTER_DESC1 adapterDesc;
@@ -760,4 +782,35 @@ void nsGALDeviceDX12::PushDebugGroup(const char* szName)
 
 void nsGALDeviceDX12::PopDebugGroup()
 {
+}
+
+void nsGALDeviceDX12::ConsumeValidationMessages(std::vector<nsValidationMessage>& outMessages)
+{
+  if (!m_pInfoQueue)
+    return;
+
+  const uint64_t messageCount = m_pInfoQueue->GetNumStoredMessages();
+  for (uint64_t i = m_uiConsumedInfoQueueMessages; i < messageCount; ++i)
+  {
+    SIZE_T messageLength = 0;
+    if (FAILED(m_pInfoQueue->GetMessage(i, nullptr, &messageLength)) || messageLength == 0)
+      continue;
+
+    std::vector<char> storage(messageLength);
+    auto* message = reinterpret_cast<D3D12_MESSAGE*>(storage.data());
+    if (FAILED(m_pInfoQueue->GetMessage(i, message, &messageLength)))
+      continue;
+
+    nsValidationMessage validation;
+    validation.m_sSource = "D3D12";
+    validation.m_sSeverity = ToValidationSeverity(message->Severity);
+    validation.m_sMessage = message->pDescription ? message->pDescription : "";
+    validation.m_sRecommendation =
+      validation.m_sSeverity == "Fatal"
+        ? "Treat D3D12 validation errors as fatal for this test; inspect the RHI call sequence and resource state transitions."
+        : "Review the D3D12 validation warning and either fix the backend call sequence or explicitly document why it is expected.";
+    outMessages.push_back(std::move(validation));
+  }
+
+  m_uiConsumedInfoQueueMessages = messageCount;
 }

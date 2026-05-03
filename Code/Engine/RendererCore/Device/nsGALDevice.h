@@ -41,6 +41,15 @@ struct nsGALDeviceCreationDescription
   int32_t m_iPreferredAdapterIndex = -1; // -1 = auto-select
 };
 
+/// Backend validation/debug layer message captured during a test run.
+struct nsValidationMessage
+{
+  std::string m_sSource;
+  std::string m_sSeverity = "Info";
+  std::string m_sMessage;
+  std::string m_sRecommendation;
+};
+
 /// Abstract GPU device. All renderer backends derive from this.
 class nsGALDevice
 {
@@ -140,6 +149,7 @@ public:
   // --- Debug ---
   virtual void PushDebugGroup(const char* szName) = 0;
   virtual void PopDebugGroup() = 0;
+  virtual void ConsumeValidationMessages(std::vector<nsValidationMessage>& outMessages) { (void)outMessages; }
 
   // --- Factory ---
 

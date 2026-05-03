@@ -1,0 +1,77 @@
+<UserControl x:Class="T3.Views.Panels.TestDetailsPanel"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <ScrollViewer VerticalScrollBarVisibility="Auto">
+        <Border Style="{DynamicResource T3PanelBodyStyle}" Margin="8">
+            <StackPanel>
+                <TextBlock Text="{Binding SelectedTestDetail.TestName}" FontWeight="Bold" FontSize="14"/>
+                <Separator Margin="0,8,0,8"/>
+                <TextBlock Text="Status" FontWeight="SemiBold"/>
+                <TextBlock Text="{Binding SelectedTestDetail.StatusText}"
+                           Foreground="{Binding SelectedTestDetail.StatusBrush}"
+                           Margin="0,2,0,8"/>
+                <TextBlock Text="Graphics API" FontWeight="SemiBold"/>
+                <TextBlock Text="{Binding SelectedTestDetail.API}" Margin="0,2,0,8"/>
+                <TextBlock Text="Render Time" FontWeight="SemiBold"/>
+                <TextBlock Text="{Binding SelectedTestDetail.RenderTime}" Margin="0,2,0,8"/>
+                <Separator Margin="0,4,0,8"/>
+                <TextBlock Text="Comparison Metrics" FontWeight="Bold" FontSize="12"/>
+                <TextBlock Text="Mean Error" FontWeight="SemiBold" Margin="0,8,0,0"/>
+                <TextBlock Text="{Binding SelectedTestDetail.MeanError}" Margin="0,2,0,4"/>
+                <TextBlock Text="Max Error" FontWeight="SemiBold"/>
+                <TextBlock Text="{Binding SelectedTestDetail.MaxError}" Margin="0,2,0,4"/>
+                <TextBlock Text="Median Error" FontWeight="SemiBold"/>
+                <TextBlock Text="{Binding SelectedTestDetail.MedianError}" Margin="0,2,0,4"/>
+                <TextBlock Text="95th Percentile" FontWeight="SemiBold"/>
+                <TextBlock Text="{Binding SelectedTestDetail.P95Error}" Margin="0,2,0,4"/>
+                <TextBlock Text="Pixels Failed" FontWeight="SemiBold"/>
+                <TextBlock Text="{Binding SelectedTestDetail.PixelsFailed}" Margin="0,2,0,4"/>
+                <TextBlock Text="Failure %" FontWeight="SemiBold"/>
+                <TextBlock Text="{Binding SelectedTestDetail.FailurePercent}" Margin="0,2,0,8"/>
+                <Separator Margin="0,4,0,8"/>
+                <TextBlock Text="{Binding SelectedTestDetail.ErrorMessage}" Foreground="OrangeRed" TextWrapping="Wrap"/>
+                <Separator Margin="0,8,0,8"/>
+                <DockPanel LastChildFill="False">
+                    <TextBlock Text="API Call Diagnostics" FontWeight="Bold" FontSize="12" DockPanel.Dock="Left"/>
+                    <TextBlock Text="{Binding SelectedTestDetail.ApiDiagnosticsSummary}"
+                               Foreground="{Binding SelectedTestDetail.ApiDiagnosticsBrush}"
+                               HorizontalAlignment="Right"
+                               DockPanel.Dock="Right"/>
+                </DockPanel>
+                <ItemsControl ItemsSource="{Binding SelectedTestDetail.ApiCallChecks}" Margin="0,6,0,0">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <Border BorderBrush="{DynamicResource T3Brush.Border}"
+                                    BorderThickness="1"
+                                    Background="{DynamicResource T3Brush.PanelRaised}"
+                                    Padding="6"
+                                    Margin="0,0,0,6">
+                                <StackPanel>
+                                    <DockPanel>
+                                        <TextBlock Text="{Binding StatusText}"
+                                                   Foreground="{Binding StatusBrush}"
+                                                   FontWeight="SemiBold"
+                                                   DockPanel.Dock="Right"/>
+                                        <StackPanel Orientation="Horizontal">
+                                            <Border Width="8" Height="8" CornerRadius="4"
+                                                    Background="{Binding StatusBrush}"
+                                                    Margin="0,4,6,0"/>
+                                            <TextBlock Text="{Binding Category}" Foreground="{DynamicResource T3Brush.TextMuted}"/>
+                                            <TextBlock Text=" / " Foreground="{DynamicResource T3Brush.TextMuted}"/>
+                                            <TextBlock Text="{Binding CallName}" FontWeight="SemiBold"/>
+                                        </StackPanel>
+                                    </DockPanel>
+                                    <TextBlock Text="{Binding Message}" TextWrapping="Wrap" Margin="14,4,0,0"/>
+                                    <TextBlock Text="{Binding Recommendation}"
+                                               TextWrapping="Wrap"
+                                               Foreground="{DynamicResource T3Brush.TextMuted}"
+                                               Margin="14,4,0,0"/>
+                                </StackPanel>
+                            </Border>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </StackPanel>
+        </Border>
+    </ScrollViewer>
+</UserControl>

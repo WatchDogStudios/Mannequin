@@ -1,0 +1,26 @@
+{
+  "totalTests": 1,
+  "passed": 1,
+  "failed": 0,
+  "skipped": 0,
+  "newBaselines": 1,
+  "totalTimeMs": 112.18,
+  "results": [
+    {
+      "testName": "BasicTriangle",
+      "api": "Vulkan",
+      "passed": true,
+      "renderSucceeded": true,
+      "referenceExists": false,
+      "renderTimeMs": 112.18,
+      "meanError": 0.000000,
+      "maxError": 0.000000,
+      "medianError": 0.000000,
+      "p95Error": 0.000000,
+      "pixelsFailed": 0,
+      "totalPixels": 262144,
+      "failurePercentage": 0.0000,
+      "error": "New baseline created (fixture renderer)"
+    }
+  ]
+}

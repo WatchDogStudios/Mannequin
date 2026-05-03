@@ -1,0 +1,306 @@
+<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:t3conv="clr-namespace:T3Foundation.Wpf.Converters">
+
+    <ResourceDictionary.MergedDictionaries>
+        <ResourceDictionary Source="/T3Foundation;component/Wpf/T3SyncfusionOverrides.xaml"/>
+        <ResourceDictionary Source="/T3Foundation;component/Wpf/Shell/T3Shell.xaml"/>
+    </ResourceDictionary.MergedDictionaries>
+
+    <!-- FrostEd x Unreal Editor Palette -->
+    <Color x:Key="T3Color.Window">#FF2B2B2B</Color>
+    <Color x:Key="T3Color.WindowDeep">#FF1A1A1A</Color>
+    <Color x:Key="T3Color.TitleBar">#FF1F1F1F</Color>
+    <Color x:Key="T3Color.Panel">#FF2B2B2B</Color>
+    <Color x:Key="T3Color.PanelRaised">#FF3C3C3C</Color>
+    <Color x:Key="T3Color.PanelInset">#FF1A1A1A</Color>
+    <Color x:Key="T3Color.PanelHover">#FF454545</Color>
+    <Color x:Key="T3Color.PanelPressed">#FF252525</Color>
+    <Color x:Key="T3Color.Border">#FF1F1F1F</Color>
+    <Color x:Key="T3Color.BorderBright">#FF555555</Color>
+    <Color x:Key="T3Color.Accent">#FF29A5D0</Color>
+    <Color x:Key="T3Color.AccentDim">#FF1B6E8C</Color>
+    <Color x:Key="T3Color.AccentSecondary">#FFFF6B35</Color>
+    <Color x:Key="T3Color.Viewport">#FF1A1A1A</Color>
+    <Color x:Key="T3Color.ChromeRaised">#FF3C3C3C</Color>
+    <Color x:Key="T3Color.Text">#FFE0E0E0</Color>
+    <Color x:Key="T3Color.TextMuted">#FFA0A0A0</Color>
+    <Color x:Key="T3Color.Success">#FF4CAF50</Color>
+    <Color x:Key="T3Color.Warning">#FFFFB347</Color>
+    <Color x:Key="T3Color.Error">#FFFF4D4D</Color>
+    <Color x:Key="T3Color.Selection">#FF1F4F66</Color>
+
+    <SolidColorBrush x:Key="T3Brush.Window" Color="{StaticResource T3Color.Window}"/>
+    <SolidColorBrush x:Key="T3Brush.WindowDeep" Color="{StaticResource T3Color.WindowDeep}"/>
+    <SolidColorBrush x:Key="T3Brush.TitleBar" Color="{StaticResource T3Color.TitleBar}"/>
+    <SolidColorBrush x:Key="T3Brush.Panel" Color="{StaticResource T3Color.Panel}"/>
+    <SolidColorBrush x:Key="T3Brush.PanelRaised" Color="{StaticResource T3Color.PanelRaised}"/>
+    <SolidColorBrush x:Key="T3Brush.PanelInset" Color="{StaticResource T3Color.PanelInset}"/>
+    <SolidColorBrush x:Key="T3Brush.PanelHover" Color="{StaticResource T3Color.PanelHover}"/>
+    <SolidColorBrush x:Key="T3Brush.PanelPressed" Color="{StaticResource T3Color.PanelPressed}"/>
+    <SolidColorBrush x:Key="T3Brush.Border" Color="{StaticResource T3Color.Border}"/>
+    <SolidColorBrush x:Key="T3Brush.BorderBright" Color="{StaticResource T3Color.BorderBright}"/>
+    <SolidColorBrush x:Key="T3Brush.Accent" Color="{StaticResource T3Color.Accent}"/>
+    <SolidColorBrush x:Key="T3Brush.AccentDim" Color="{StaticResource T3Color.AccentDim}"/>
+    <SolidColorBrush x:Key="T3Brush.AccentSecondary" Color="{StaticResource T3Color.AccentSecondary}"/>
+    <SolidColorBrush x:Key="T3Brush.Viewport" Color="{StaticResource T3Color.Viewport}"/>
+    <SolidColorBrush x:Key="T3Brush.ChromeRaised" Color="{StaticResource T3Color.ChromeRaised}"/>
+    <SolidColorBrush x:Key="T3Brush.Text" Color="{StaticResource T3Color.Text}"/>
+    <SolidColorBrush x:Key="T3Brush.TextMuted" Color="{StaticResource T3Color.TextMuted}"/>
+    <SolidColorBrush x:Key="T3Brush.Success" Color="{StaticResource T3Color.Success}"/>
+    <SolidColorBrush x:Key="T3Brush.Warning" Color="{StaticResource T3Color.Warning}"/>
+    <SolidColorBrush x:Key="T3Brush.Error" Color="{StaticResource T3Color.Error}"/>
+    <SolidColorBrush x:Key="T3Brush.Selection" Color="{StaticResource T3Color.Selection}"/>
+    <SolidColorBrush x:Key="T3Brush.Transparent" Color="#00000000"/>
+
+    <!-- Standard Value Converters -->
+    <t3conv:BoolToVisibilityConverter x:Key="T3BoolToVisibility"/>
+    <t3conv:BoolToVisibilityConverter x:Key="T3InverseBoolToVisibility" Invert="True"/>
+    <t3conv:InverseBoolConverter x:Key="T3InverseBool"/>
+    <t3conv:NullToVisibilityConverter x:Key="T3NullToVisibility"/>
+    <t3conv:NullToVisibilityConverter x:Key="T3InverseNullToVisibility" Invert="True"/>
+    <t3conv:NullToBoolConverter x:Key="T3NullToBool"/>
+    <t3conv:StringToVisibilityConverter x:Key="T3StringToVisibility"/>
+    <t3conv:ColorToBrushConverter x:Key="T3ColorToBrush"/>
+    <t3conv:EnumToBoolConverter x:Key="T3EnumToBool"/>
+    <t3conv:MathConverter x:Key="T3Math"/>
+    <t3conv:StringFormatConverter x:Key="T3StringFormat"/>
+
+    <!-- Multi-Value Converters -->
+    <t3conv:BooleanAndConverter x:Key="T3BooleanAnd"/>
+    <t3conv:BooleanOrConverter x:Key="T3BooleanOr"/>
+    <t3conv:EqualityConverter x:Key="T3Equality"/>
+
+    <!-- Icon key (string) -> renderable icon visual; used by data-bound toolbar items. -->
+    <t3conv:T3IconKeyConverter x:Key="T3IconKeyConverter" Size="14"/>
+
+    <!-- Foundation Control Styling -->
+    <Style TargetType="{x:Type Window}">
+        <Setter Property="Background" Value="{StaticResource T3Brush.Window}"/>
+        <Setter Property="Foreground" Value="{StaticResource T3Brush.Text}"/>
+        <Setter Property="FontFamily" Value="Segoe UI"/>
+        <Setter Property="FontSize" Value="12"/>
+        <Setter Property="TextOptions.TextFormattingMode" Value="Display"/>
+    </Style>
+
+    <Style TargetType="{x:Type TextBlock}">
+        <Setter Property="Foreground" Value="{StaticResource T3Brush.Text}"/>
+        <Setter Property="TextOptions.TextFormattingMode" Value="Display"/>
+    </Style>
+
+    <Style x:Key="T3PanelTitleTextStyle" TargetType="{x:Type TextBlock}" BasedOn="{StaticResource {x:Type TextBlock}}">
+        <Setter Property="Foreground" Value="{StaticResource T3Brush.Text}"/>
+        <Setter Property="FontWeight" Value="SemiBold"/>
+        <Setter Property="Margin" Value="4,0,4,4"/>
+    </Style>
+
+    <Style x:Key="T3MutedTextStyle" TargetType="{x:Type TextBlock}" BasedOn="{StaticResource {x:Type TextBlock}}">
+        <Setter Property="Foreground" Value="{StaticResource T3Brush.TextMuted}"/>
+    </Style>
+
+    <Style x:Key="T3SectionHeaderTextStyle" TargetType="{x:Type TextBlock}" BasedOn="{StaticResource {x:Type TextBlock}}">
+        <Setter Property="Foreground" Value="{StaticResource T3Brush.Text}"/>
+        <Setter Property="FontSize" Value="11"/>
+        <Setter Property="FontWeight" Value="SemiBold"/>
+        <Setter Property="Margin" Value="0,0,0,6"/>
+    </Style>
+
+    <Style TargetType="{x:Type Separator}">
+        <Setter Property="Background" Value="{StaticResource T3Brush.Border}"/>
+        <Setter Property="Margin" Value="6,0"/>
+    </Style>
+
+    <Style x:Key="T3ButtonBaseStyle" TargetType="{x:Type Button}">
+        <Setter Property="Foreground" Value="{StaticResource T3Brush.Text}"/>
+        <Setter Property="Background" Value="{StaticResource T3Brush.PanelRaised}"/>
+        <Setter Property="BorderBrush" Value="{StaticResource T3Brush.Border}"/>
+        <Setter Property="BorderThickness" Value="1"/>
+        <Setter Property="Padding" Value="10,4"/>
+        <Setter Property="MinHeight" Value="26"/>
+        <Setter Property="SnapsToDevicePixels" Value="True"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type Button}">
+                    <Border x:Name="Chrome"
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            CornerRadius="3"
+                            Padding="{TemplateBinding Padding}">
+                        <ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                          VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+                                          RecognizesAccessKey="True"/>
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter TargetName="Chrome" Property="Background" Value="{StaticResource T3Brush.PanelHover}"/>
+                            <Setter TargetName="Chrome" Property="BorderBrush" Value="{StaticResource T3Brush.BorderBright}"/>
+                        </Trigger>
+                        <Trigger Property="IsPressed" Value="True">
+                            <Setter TargetName="Chrome" Property="Background" Value="{StaticResource T3Brush.PanelPressed}"/>
+                            <Setter TargetName="Chrome" Property="BorderBrush" Value="{StaticResource T3Brush.Accent}"/>
+                        </Trigger>
+                        <Trigger Property="IsEnabled" Value="False">
+                            <Setter Property="Opacity" Value="0.48"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style TargetType="{x:Type Button}" BasedOn="{StaticResource T3ButtonBaseStyle}"/>
+
+    <Style x:Key="T3ToolbarButtonStyle" TargetType="{x:Type Button}" BasedOn="{StaticResource T3ButtonBaseStyle}">
+        <Setter Property="Background" Value="{StaticResource T3Brush.ChromeRaised}"/>
+        <Setter Property="BorderBrush" Value="{StaticResource T3Brush.Border}"/>
+        <Setter Property="Padding" Value="8,3"/>
+        <Setter Property="MinHeight" Value="30"/>
+        <Setter Property="Margin" Value="1,0"/>
+    </Style>
+
+    <Style x:Key="T3TitleBarButtonStyle" TargetType="{x:Type Button}" BasedOn="{StaticResource T3ButtonBaseStyle}">
+        <Setter Property="Background" Value="{StaticResource T3Brush.Transparent}"/>
+        <Setter Property="BorderBrush" Value="{StaticResource T3Brush.Transparent}"/>
+        <Setter Property="Padding" Value="0"/>
+        <Setter Property="Width" Value="44"/>
+        <Setter Property="MinHeight" Value="34"/>
+        <Setter Property="Margin" Value="0"/>
+    </Style>
+
+    <Style x:Key="T3TitleBarCloseButtonStyle" TargetType="{x:Type Button}" BasedOn="{StaticResource T3TitleBarButtonStyle}">
+        <Setter Property="Background" Value="{StaticResource T3Brush.Transparent}"/>
+    </Style>
+
+    <Style TargetType="{x:Type TextBox}">
+        <Setter Property="Foreground" Value="{StaticResource T3Brush.Text}"/>
+        <Setter Property="Background" Value="{StaticResource T3Brush.Panel}"/>
+        <Setter Property="BorderBrush" Value="{StaticResource T3Brush.Border}"/>
+        <Setter Property="BorderThickness" Value="1"/>
+        <Setter Property="CaretBrush" Value="{StaticResource T3Brush.Accent}"/>
+        <Setter Property="Padding" Value="6,3"/>
+        <Setter Property="MinHeight" Value="24"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type TextBox}">
+                    <Border x:Name="Chrome"
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            CornerRadius="2">
+                        <ScrollViewer x:Name="PART_ContentHost" Margin="{TemplateBinding Padding}"/>
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsKeyboardFocused" Value="True">
+                            <Setter TargetName="Chrome" Property="BorderBrush" Value="{StaticResource T3Brush.Accent}"/>
+                        </Trigger>
+                        <Trigger Property="IsEnabled" Value="False">
+                            <Setter Property="Opacity" Value="0.55"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style TargetType="{x:Type ComboBox}">
+        <Setter Property="Foreground" Value="{StaticResource T3Brush.Text}"/>
+        <Setter Property="Background" Value="{StaticResource T3Brush.Panel}"/>
+        <Setter Property="BorderBrush" Value="{StaticResource T3Brush.BorderBright}"/>
+        <Setter Property="MinHeight" Value="28"/>
+        <Setter Property="Padding" Value="6,2"/>
+    </Style>
+
+    <Style TargetType="{x:Type ListBox}">
+        <Setter Property="Foreground" Value="{StaticResource T3Brush.Text}"/>
+        <Setter Property="Background" Value="{StaticResource T3Brush.Panel}"/>
+        <Setter Property="BorderBrush" Value="{StaticResource T3Brush.Border}"/>
+        <Setter Property="BorderThickness" Value="1"/>
+    </Style>
+
+    <Style TargetType="{x:Type ListBoxItem}">
+        <Setter Property="Foreground" Value="{StaticResource T3Brush.Text}"/>
+        <Setter Property="Background" Value="{StaticResource T3Brush.Transparent}"/>
+        <Setter Property="Padding" Value="6,4"/>
+        <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type ListBoxItem}">
+                    <Border x:Name="Chrome"
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="{StaticResource T3Brush.Transparent}"
+                            BorderThickness="1"
+                            Padding="{TemplateBinding Padding}">
+                        <ContentPresenter/>
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter TargetName="Chrome" Property="Background" Value="{StaticResource T3Brush.PanelHover}"/>
+                        </Trigger>
+                        <Trigger Property="IsSelected" Value="True">
+                            <Setter TargetName="Chrome" Property="Background" Value="{StaticResource T3Brush.Selection}"/>
+                            <Setter TargetName="Chrome" Property="BorderBrush" Value="{StaticResource T3Brush.AccentDim}"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style TargetType="{x:Type CheckBox}">
+        <Setter Property="Foreground" Value="{StaticResource T3Brush.Text}"/>
+        <Setter Property="VerticalContentAlignment" Value="Center"/>
+    </Style>
+
+    <Style TargetType="{x:Type RadioButton}">
+        <Setter Property="Foreground" Value="{StaticResource T3Brush.Text}"/>
+        <Setter Property="VerticalContentAlignment" Value="Center"/>
+    </Style>
+
+    <Style TargetType="{x:Type Slider}">
+        <Setter Property="Foreground" Value="{StaticResource T3Brush.Accent}"/>
+        <Setter Property="Background" Value="{StaticResource T3Brush.Border}"/>
+    </Style>
+
+    <Style TargetType="{x:Type ProgressBar}">
+        <Setter Property="Foreground" Value="{StaticResource T3Brush.Accent}"/>
+        <Setter Property="Background" Value="{StaticResource T3Brush.PanelRaised}"/>
+        <Setter Property="BorderBrush" Value="{StaticResource T3Brush.Border}"/>
+    </Style>
+
+    <Style TargetType="{x:Type StatusBar}">
+        <Setter Property="Background" Value="{StaticResource T3Brush.TitleBar}"/>
+        <Setter Property="Foreground" Value="{StaticResource T3Brush.Text}"/>
+        <Setter Property="BorderBrush" Value="{StaticResource T3Brush.Border}"/>
+        <Setter Property="BorderThickness" Value="1,1,0,0"/>
+    </Style>
+
+    <Style TargetType="{x:Type StatusBarItem}">
+        <Setter Property="Foreground" Value="{StaticResource T3Brush.Text}"/>
+        <Setter Property="Padding" Value="2,0"/>
+    </Style>
+
+    <Style x:Key="T3ViewportFrameStyle" TargetType="{x:Type Border}">
+        <Setter Property="Background" Value="{StaticResource T3Brush.Viewport}"/>
+        <Setter Property="BorderBrush" Value="{StaticResource T3Brush.BorderBright}"/>
+        <Setter Property="BorderThickness" Value="1"/>
+        <Setter Property="Margin" Value="4"/>
+    </Style>
+
+    <Style x:Key="T3PanelBodyStyle" TargetType="{x:Type Border}">
+        <Setter Property="Background" Value="{StaticResource T3Brush.Panel}"/>
+        <Setter Property="BorderBrush" Value="{StaticResource T3Brush.Border}"/>
+        <Setter Property="BorderThickness" Value="1"/>
+        <Setter Property="Padding" Value="8"/>
+    </Style>
+
+    <Style x:Key="T3InspectorItemStyle" TargetType="{x:Type Border}">
+        <Setter Property="Background" Value="{StaticResource T3Brush.PanelRaised}"/>
+        <Setter Property="BorderBrush" Value="{StaticResource T3Brush.Border}"/>
+        <Setter Property="BorderThickness" Value="1"/>
+        <Setter Property="Padding" Value="7"/>
+        <Setter Property="Margin" Value="0,0,0,6"/>
+    </Style>
+
+</ResourceDictionary>

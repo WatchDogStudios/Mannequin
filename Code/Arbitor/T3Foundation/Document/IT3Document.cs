@@ -4,48 +4,73 @@
  *   You are only allowed access to this code, if given WRITTEN permission by Watch Dogs LLC.
  */
 
-using System.ComponentModel.Composition;
-using System.ComponentModel.Composition.Hosting;
+#nullable enable
+
 using System.Collections.Generic;
-using System.Configuration;
-using System.Diagnostics;
-using System.IO;
+using T3Foundation.Context;
+using T3Foundation.Panel;
 
 namespace T3Foundation.Documents
 {
-    public enum ET3DocumentType
-    {
-        /// Basic text document. this can be used to hold public information about the application.
-        ET3DT_TEXT = 0,
-        ET3DT_XMLElement = 1,
-        ET3DT_XML = 2,
-        /// Interchangeable data format that we commonly use.
-        ET3DT_DDL = 3,
-        ET3DT_JSON = 4,
-        /// Some sort of binary data format that the underlying application uses. this can range from: nspak, nslevel, nsasset, etc... 
-        ET3DT_BINARY = 4,
-    }
+  /// <summary>
+  /// A Document defines HOW data is edited by configuring which Panels
+  /// appear and where they are laid out for a specific workflow.
+  ///
+  /// Documents do NOT contain business logic. They are workflow configurators
+  /// that compose reusable Panels around a Context.
+  ///
+  /// Based on Workflow-Driven Tool Design
+  /// (See Remedy's Talk: https://www.youtube.com/watch?v=kAfb0yx07Po)
+  /// </summary>
+  public interface IT3Document
+  {
     /// <summary>
-    /// Document Class for T3 Applications.
-    /// This class defines HOW the data is being edited
-    /// The Design is based off of a Workflow Driven Tool Design. (See remedy's Talk: https://www.youtube.com/watch?v=kAfb0yx07Po&t=926s)/// 
-    /// </summary> 
-    public interface IT3Document
-    {
-        public string DocumentName {get; set;}
-        /// <summary>
-        /// Function for registering UI Elements with data.
-        /// Components that are registered with this function are REQUIRED to give us some sort of information to send and receive for editing.
-        /// </summary>
-        /// <param name="assetdata">type of data that the component should be managing. this will be sent over to the context for data retrieval. (e.g.: "asset::PhysicsDefinition" we are looking for the physics definition )</param>
-        /// <typeparam name="T">Component To Register</typeparam>
-        public void RegisterComponent<T>(string assetdata);
-        public ET3DocumentType DocumentType {get; set; }
-        /// <summary>
-        /// Whether the document is currently being edited/checked out by another user.
-        /// Mainly for applications that use Perforce like we do.
-        /// </summary>
-        /// <value></value>
-        public bool isEditable {get; set; }
-    }
+    /// Unique instance identifier for this document.
+    /// </summary>
+    string DocumentId { get; }
+
+    /// <summary>
+    /// Display name shown in tab headers.
+    /// </summary>
+    string DocumentName { get; }
+
+    /// <summary>
+    /// The Context this document is editing (set during <see cref="Configure"/>).
+    /// </summary>
+    IT3Context? Context { get; }
+
+    /// <summary>
+    /// The panel layout configuration. Describes which panels are shown and where.
+    /// Populated during <see cref="Configure"/>.
+    /// </summary>
+    IReadOnlyList<T3PanelSlot> PanelLayout { get; }
+
+    /// <summary>
+    /// Configure this document for a given context.
+    /// Called by the Workflow Manager when opening a new workflow.
+    /// Implementations should add panels via the layout and bind them to the context.
+    /// </summary>
+    void Configure(IT3Context context);
+
+    /// <summary>
+    /// Called when this document becomes the active/focused tab.
+    /// </summary>
+    void OnActivated();
+
+    /// <summary>
+    /// Called when the user switches away from this document.
+    /// </summary>
+    void OnDeactivated();
+
+    /// <summary>
+    /// Check whether this document can be closed.
+    /// Return false to prevent closing (e.g., prompt for unsaved changes).
+    /// </summary>
+    bool CanClose();
+
+    /// <summary>
+    /// Close this document. Unbinds all panels from the context.
+    /// </summary>
+    void Close();
+  }
 }

@@ -1,0 +1,34 @@
+<UserControl x:Class="T3Foundation.Wpf.Panels.T3OutlinerPanel"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:t3="clr-namespace:T3Foundation.Wpf.Behaviors">
+    <Grid Background="{DynamicResource T3Brush.Panel}">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <TextBox Grid.Row="0"
+                 x:Name="SearchBox"
+                 Margin="4"
+                 t3:T3Behaviors.Watermark="Filter..."
+                 TextChanged="OnSearchChanged"/>
+
+        <TreeView Grid.Row="1"
+                  x:Name="Tree"
+                  Margin="4"
+                  ItemsSource="{Binding Roots, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}"
+                  SelectedItemChanged="OnSelectedItemChanged">
+            <TreeView.ItemContainerStyle>
+                <Style TargetType="{x:Type TreeViewItem}">
+                    <Setter Property="IsExpanded" Value="{Binding IsExpanded, Mode=TwoWay}"/>
+                </Style>
+            </TreeView.ItemContainerStyle>
+            <TreeView.ItemTemplate>
+                <HierarchicalDataTemplate ItemsSource="{Binding Children}">
+                    <TextBlock Text="{Binding Name}"/>
+                </HierarchicalDataTemplate>
+            </TreeView.ItemTemplate>
+        </TreeView>
+    </Grid>
+</UserControl>

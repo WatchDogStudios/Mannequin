@@ -10,6 +10,144 @@
 
 namespace fs = std::filesystem;
 
+namespace
+{
+  void WriteJsonString(FILE* f, const std::string& value)
+  {
+    fputc('"', f);
+    for (char c : value)
+    {
+      switch (c)
+      {
+        case '\\':
+          fputs("\\\\", f);
+          break;
+        case '"':
+          fputs("\\\"", f);
+          break;
+        case '\n':
+          fputs("\\n", f);
+          break;
+        case '\r':
+          fputs("\\r", f);
+          break;
+        case '\t':
+          fputs("\\t", f);
+          break;
+        default:
+          fputc(c, f);
+          break;
+      }
+    }
+    fputc('"', f);
+  }
+
+  void WriteApiCallChecks(FILE* f, const std::vector<nsApiCallCheck>& checks)
+  {
+    fprintf(f, "[\n");
+    for (size_t checkIndex = 0; checkIndex < checks.size(); ++checkIndex)
+    {
+      const auto& check = checks[checkIndex];
+      fprintf(f, "        {\n");
+      fprintf(f, "          \"callName\": ");
+      WriteJsonString(f, check.m_sCallName);
+      fprintf(f, ",\n          \"category\": ");
+      WriteJsonString(f, check.m_sCategory);
+      fprintf(f, ",\n          \"passed\": %s,\n", check.m_bPassed ? "true" : "false");
+      fprintf(f, "          \"severity\": ");
+      WriteJsonString(f, check.m_sSeverity);
+      fprintf(f, ",\n          \"message\": ");
+      WriteJsonString(f, check.m_sMessage);
+      fprintf(f, ",\n          \"recommendation\": ");
+      WriteJsonString(f, check.m_sRecommendation);
+      fprintf(f, "\n        }%s\n", (checkIndex + 1 < checks.size()) ? "," : "");
+    }
+    fprintf(f, "      ]");
+  }
+
+  void WriteValidationMessages(FILE* f, const std::vector<nsValidationMessage>& messages)
+  {
+    fprintf(f, "[\n");
+    for (size_t messageIndex = 0; messageIndex < messages.size(); ++messageIndex)
+    {
+      const auto& message = messages[messageIndex];
+      fprintf(f, "        {\n");
+      fprintf(f, "          \"source\": ");
+      WriteJsonString(f, message.m_sSource);
+      fprintf(f, ",\n          \"severity\": ");
+      WriteJsonString(f, message.m_sSeverity);
+      fprintf(f, ",\n          \"message\": ");
+      WriteJsonString(f, message.m_sMessage);
+      fprintf(f, ",\n          \"recommendation\": ");
+      WriteJsonString(f, message.m_sRecommendation);
+      fprintf(f, "\n        }%s\n", (messageIndex + 1 < messages.size()) ? "," : "");
+    }
+    fprintf(f, "      ]");
+  }
+
+  void WriteResourceSnapshots(FILE* f, const std::vector<nsResourceSnapshot>& snapshots)
+  {
+    fprintf(f, "[\n");
+    for (size_t snapshotIndex = 0; snapshotIndex < snapshots.size(); ++snapshotIndex)
+    {
+      const auto& snapshot = snapshots[snapshotIndex];
+      fprintf(f, "        {\n");
+      fprintf(f, "          \"name\": ");
+      WriteJsonString(f, snapshot.m_sName);
+      fprintf(f, ",\n          \"type\": ");
+      WriteJsonString(f, snapshot.m_sType);
+      fprintf(f, ",\n          \"slot\": ");
+      WriteJsonString(f, snapshot.m_sSlot);
+      fprintf(f, ",\n          \"format\": ");
+      WriteJsonString(f, snapshot.m_sFormat);
+      fprintf(f, ",\n          \"state\": ");
+      WriteJsonString(f, snapshot.m_sState);
+      fprintf(f, ",\n          \"summary\": ");
+      WriteJsonString(f, snapshot.m_sSummary);
+      fprintf(f, ",\n          \"previewPath\": ");
+      WriteJsonString(f, snapshot.m_sPreviewPath);
+      fprintf(f, ",\n          \"width\": %u,\n", snapshot.m_uiWidth);
+      fprintf(f, "          \"height\": %u,\n", snapshot.m_uiHeight);
+      fprintf(f, "          \"depth\": %u,\n", snapshot.m_uiDepth);
+      fprintf(f, "          \"mipLevels\": %u,\n", snapshot.m_uiMipLevels);
+      fprintf(f, "          \"elementCount\": %u,\n", snapshot.m_uiElementCount);
+      fprintf(f, "          \"rowPitch\": %u,\n", snapshot.m_uiRowPitch);
+      fprintf(f, "          \"byteSize\": %llu,\n", static_cast<unsigned long long>(snapshot.m_uiByteSize));
+      fprintf(f, "          \"values\": [");
+      for (size_t valueIndex = 0; valueIndex < snapshot.m_Values.size(); ++valueIndex)
+      {
+        if (valueIndex > 0)
+          fprintf(f, ", ");
+        WriteJsonString(f, snapshot.m_Values[valueIndex]);
+      }
+      fprintf(f, "],\n");
+      fprintf(f, "          \"stateChecks\": [\n");
+      for (size_t checkIndex = 0; checkIndex < snapshot.m_StateChecks.size(); ++checkIndex)
+      {
+        const auto& check = snapshot.m_StateChecks[checkIndex];
+        fprintf(f, "            {\n");
+        fprintf(f, "              \"name\": ");
+        WriteJsonString(f, check.m_sName);
+        fprintf(f, ",\n              \"passed\": %s,\n", check.m_bPassed ? "true" : "false");
+        fprintf(f, "              \"severity\": ");
+        WriteJsonString(f, check.m_sSeverity);
+        fprintf(f, ",\n              \"actual\": ");
+        WriteJsonString(f, check.m_sActual);
+        fprintf(f, ",\n              \"expected\": ");
+        WriteJsonString(f, check.m_sExpected);
+        fprintf(f, ",\n              \"message\": ");
+        WriteJsonString(f, check.m_sMessage);
+        fprintf(f, ",\n              \"recommendation\": ");
+        WriteJsonString(f, check.m_sRecommendation);
+        fprintf(f, "\n            }%s\n", (checkIndex + 1 < snapshot.m_StateChecks.size()) ? "," : "");
+      }
+      fprintf(f, "          ]\n");
+      fprintf(f, "        }%s\n", (snapshotIndex + 1 < snapshots.size()) ? "," : "");
+    }
+    fprintf(f, "      ]");
+  }
+}
+
 nsVisualTestRunner::nsVisualTestRunner() = default;
 nsVisualTestRunner::~nsVisualTestRunner() = default;
 
@@ -36,7 +174,7 @@ nsVisualTestResult nsVisualTestRunner::RunSingleTest(nsGALDevice* pDevice, const
 
   try
   {
-    result.m_bRenderSucceeded = testCase.m_RenderCallback(pDevice, testImage);
+    result.m_bRenderSucceeded = testCase.m_RenderCallback(pDevice, testImage, result.m_ApiCallChecks, result.m_ResourceSnapshots, result.m_ValidationMessages);
   }
   catch (const std::exception& e)
   {
@@ -46,6 +184,7 @@ nsVisualTestResult nsVisualTestRunner::RunSingleTest(nsGALDevice* pDevice, const
 
   auto endTime = std::chrono::high_resolution_clock::now();
   result.m_fRenderTimeMs = std::chrono::duration<double, std::milli>(endTime - startTime).count();
+  pDevice->ConsumeValidationMessages(result.m_ValidationMessages);
 
   if (!result.m_bRenderSucceeded || !testImage.IsValid())
   {
@@ -65,6 +204,29 @@ nsVisualTestResult nsVisualTestRunner::RunSingleTest(nsGALDevice* pDevice, const
     testImage.SavePNG(refPath);
     result.m_sErrorMessage = "New baseline created (no reference image existed)";
     result.m_ComparisonResult.m_bPassed = true; // New baselines pass by default
+    nsResourceSnapshot baselineSnapshot;
+    baselineSnapshot.m_sName = "Captured Output";
+    baselineSnapshot.m_sType = "Texture2D";
+    baselineSnapshot.m_sSlot = "RenderTarget[0]";
+    baselineSnapshot.m_sFormat = "R8G8B8A8_UNORM";
+    baselineSnapshot.m_sState = "BaselineCreated";
+    baselineSnapshot.m_sSummary = "Final captured render target saved as the first reference baseline.";
+    baselineSnapshot.m_sPreviewPath = refPath;
+    baselineSnapshot.m_uiWidth = testImage.m_uiWidth;
+    baselineSnapshot.m_uiHeight = testImage.m_uiHeight;
+    baselineSnapshot.m_uiMipLevels = 1;
+    baselineSnapshot.m_uiRowPitch = testImage.m_uiRowPitch;
+    baselineSnapshot.m_uiByteSize = static_cast<uint64_t>(testImage.m_Data.size());
+    baselineSnapshot.m_StateChecks.push_back({
+      "Captured image valid",
+      testImage.IsValid() ? "Info" : "Error",
+      testImage.IsValid(),
+      testImage.IsValid() ? "valid" : "invalid",
+      "valid image",
+      testImage.IsValid() ? "Readback returned image data." : "Readback did not produce a valid image.",
+      "Validate readback resource allocation, copy barriers, and row pitch handling."
+    });
+    result.m_ResourceSnapshots.push_back(std::move(baselineSnapshot));
     return result;
   }
 
@@ -76,6 +238,30 @@ nsVisualTestResult nsVisualTestRunner::RunSingleTest(nsGALDevice* pDevice, const
   nsCapturedImage refImage;
   refImage.LoadPNG(refPath);
   m_Comparator.SaveComparisonReport(testImage, refImage, result.m_ComparisonResult, testOutputDir, testCase.m_sName);
+
+  nsResourceSnapshot outputSnapshot;
+  outputSnapshot.m_sName = "Captured Output";
+  outputSnapshot.m_sType = "Texture2D";
+  outputSnapshot.m_sSlot = "RenderTarget[0]";
+  outputSnapshot.m_sFormat = "R8G8B8A8_UNORM";
+  outputSnapshot.m_sState = "ReadbackComplete";
+  outputSnapshot.m_sSummary = "Final captured render target used for visual comparison.";
+  outputSnapshot.m_sPreviewPath = result.m_sAPIName + "/" + testCase.m_sName + "/" + testCase.m_sName + "_test.png";
+  outputSnapshot.m_uiWidth = testImage.m_uiWidth;
+  outputSnapshot.m_uiHeight = testImage.m_uiHeight;
+  outputSnapshot.m_uiMipLevels = 1;
+  outputSnapshot.m_uiRowPitch = testImage.m_uiRowPitch;
+  outputSnapshot.m_uiByteSize = static_cast<uint64_t>(testImage.m_Data.size());
+  outputSnapshot.m_StateChecks.push_back({
+    "Captured image valid",
+    testImage.IsValid() ? "Info" : "Error",
+    testImage.IsValid(),
+    testImage.IsValid() ? "valid" : "invalid",
+    "valid image",
+    testImage.IsValid() ? "Readback returned image data." : "Readback did not produce a valid image.",
+    "Validate readback resource allocation, copy barriers, and row pitch handling."
+  });
+  result.m_ResourceSnapshots.push_back(std::move(outputSnapshot));
 
   return result;
 }
@@ -202,8 +388,12 @@ bool nsVisualTestRunner::ExportResultsJSON(const nsVisualTestSummary& summary, c
   {
     const auto& r = summary.m_Results[i];
     fprintf(f, "    {\n");
-    fprintf(f, "      \"testName\": \"%s\",\n", r.m_sTestName.c_str());
-    fprintf(f, "      \"api\": \"%s\",\n", r.m_sAPIName.c_str());
+    fprintf(f, "      \"testName\": ");
+    WriteJsonString(f, r.m_sTestName);
+    fprintf(f, ",\n");
+    fprintf(f, "      \"api\": ");
+    WriteJsonString(f, r.m_sAPIName);
+    fprintf(f, ",\n");
     fprintf(f, "      \"passed\": %s,\n", r.m_ComparisonResult.m_bPassed ? "true" : "false");
     fprintf(f, "      \"renderSucceeded\": %s,\n", r.m_bRenderSucceeded ? "true" : "false");
     fprintf(f, "      \"referenceExists\": %s,\n", r.m_bReferenceExists ? "true" : "false");
@@ -216,7 +406,25 @@ bool nsVisualTestRunner::ExportResultsJSON(const nsVisualTestSummary& summary, c
     fprintf(f, "      \"totalPixels\": %u,\n", r.m_ComparisonResult.m_uiTotalPixels);
     fprintf(f, "      \"failurePercentage\": %.4f", r.m_ComparisonResult.GetFailurePercentage());
     if (!r.m_sErrorMessage.empty())
-      fprintf(f, ",\n      \"error\": \"%s\"", r.m_sErrorMessage.c_str());
+    {
+      fprintf(f, ",\n      \"error\": ");
+      WriteJsonString(f, r.m_sErrorMessage);
+    }
+    if (!r.m_ApiCallChecks.empty())
+    {
+      fprintf(f, ",\n      \"apiCallChecks\": ");
+      WriteApiCallChecks(f, r.m_ApiCallChecks);
+    }
+    if (!r.m_ValidationMessages.empty())
+    {
+      fprintf(f, ",\n      \"validationMessages\": ");
+      WriteValidationMessages(f, r.m_ValidationMessages);
+    }
+    if (!r.m_ResourceSnapshots.empty())
+    {
+      fprintf(f, ",\n      \"resourceSnapshots\": ");
+      WriteResourceSnapshots(f, r.m_ResourceSnapshots);
+    }
     fprintf(f, "\n    }%s\n", (i + 1 < summary.m_Results.size()) ? "," : "");
   }
 

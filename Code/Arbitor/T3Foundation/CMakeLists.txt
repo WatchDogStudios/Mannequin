@@ -37,16 +37,17 @@ set_property(TARGET ${PROJECT_NAME} PROPERTY VS_DOTNET_REFERENCES
 	"System.Xaml"
 	"System.Xml"
 	"System.Xml.Linq"
-	"Microsoft.VisualStudio.Composition"
-	"Microsoft.VisualStudio.Composition.Analyzers"
-	"Microsoft.VisualStudio.Composition.AppHost"
+	"System.Windows.Forms"
 	"${CMAKE_CURRENT_BINARY_DIR}/packages/FontAwesome5.2.1.11/lib/net462/FontAwesome5.dll"
 	"${CMAKE_CURRENT_BINARY_DIR}/packages/CommunityToolkit.Mvvm.8.2.2/lib/netstandard2.0/CommunityToolkit.Mvvm.dll"
 	"${CMAKE_CURRENT_BINARY_DIR}/packages/AdonisUI.1.17.1/lib/net45/AdonisUI.dll"
 	"${CMAKE_CURRENT_BINARY_DIR}/packages/Newtonsoft.Json.13.0.3/lib/net45/Newtonsoft.Json.dll"
+	"${CMAKE_CURRENT_BINARY_DIR}/packages/Microsoft.Extensions.DependencyInjection.8.0.0/lib/net462/Microsoft.Extensions.DependencyInjection.dll"
+	"${CMAKE_CURRENT_BINARY_DIR}/packages/Microsoft.Extensions.DependencyInjection.Abstractions.8.0.0/lib/net462/Microsoft.Extensions.DependencyInjection.Abstractions.dll"
+	"${CMAKE_CURRENT_BINARY_DIR}/packages/Microsoft.Bcl.AsyncInterfaces.8.0.0/lib/net462/Microsoft.Bcl.AsyncInterfaces.dll"
+	"${CMAKE_CURRENT_BINARY_DIR}/packages/System.Runtime.CompilerServices.Unsafe.6.0.0/lib/net461/System.Runtime.CompilerServices.Unsafe.dll"
+	"${CMAKE_CURRENT_BINARY_DIR}/packages/System.Threading.Tasks.Extensions.4.5.4/lib/net461/System.Threading.Tasks.Extensions.dll"
 	"CommunityToolkit.Mvvm"
-	"Dirkster.AvalonDock"
-	"System.ComponentModel.Composition"
 	"WindowsBase")
 
 ns_nuget_init()

@@ -1,0 +1,55 @@
+<!--
+    T3SyncfusionOverrides.xaml
+    Implicit styles that retune Syncfusion controls (DockingManager, ToolBarAdv,
+    TabItemExt, DocumentContainer, SplitContainer) to the T3 FrostEd x Unreal palette.
+
+    The custom Syncfusion basetheme (FluentDark) ships from the Themes/ folder
+    and supplies the control templates - we only override visual brushes here
+    so the assembly stays untouched.
+
+    Brush keys consumed here are defined in T3Resources.xaml. Because that file
+    merges THIS dictionary into itself, the keys it defines are reachable at
+    application scope.
+-->
+<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:syncfusion="http://schemas.syncfusion.com/wpf">
+
+    <!-- Docking host: the canvas the entire shell renders into. -->
+    <Style TargetType="{x:Type syncfusion:DockingManager}">
+        <Setter Property="Background" Value="{DynamicResource T3Brush.Window}"/>
+    </Style>
+
+    <!-- Document/anchor tabs along the top of each dock region. -->
+    <Style TargetType="{x:Type syncfusion:TabItemExt}">
+        <Setter Property="Background" Value="{DynamicResource T3Brush.TitleBar}"/>
+        <Setter Property="Foreground" Value="{DynamicResource T3Brush.TextMuted}"/>
+        <Setter Property="BorderBrush" Value="{DynamicResource T3Brush.Border}"/>
+        <Setter Property="Padding" Value="10,4"/>
+        <Style.Triggers>
+            <Trigger Property="IsSelected" Value="True">
+                <Setter Property="Background" Value="{DynamicResource T3Brush.Panel}"/>
+                <Setter Property="Foreground" Value="{DynamicResource T3Brush.Text}"/>
+                <Setter Property="BorderBrush" Value="{DynamicResource T3Brush.Accent}"/>
+            </Trigger>
+            <Trigger Property="IsMouseOver" Value="True">
+                <Setter Property="Foreground" Value="{DynamicResource T3Brush.Text}"/>
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+
+    <!-- Toolbar strip. -->
+    <Style TargetType="{x:Type syncfusion:ToolBarAdv}">
+        <Setter Property="Background" Value="{DynamicResource T3Brush.TitleBar}"/>
+        <Setter Property="Foreground" Value="{DynamicResource T3Brush.Text}"/>
+        <Setter Property="BorderBrush" Value="{DynamicResource T3Brush.Border}"/>
+        <Setter Property="BorderThickness" Value="0,0,0,1"/>
+    </Style>
+
+    <!-- Document container hosts the central document tab area. -->
+    <Style TargetType="{x:Type syncfusion:DocumentContainer}">
+        <Setter Property="Background" Value="{DynamicResource T3Brush.Window}"/>
+    </Style>
+
+</ResourceDictionary>

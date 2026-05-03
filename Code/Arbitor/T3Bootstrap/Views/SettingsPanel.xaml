@@ -1,0 +1,79 @@
+<UserControl x:Class="T3.Views.SettingsPanel"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="clr-namespace:T3.ViewModels"
+             mc:Ignorable="d"
+             d:DataContext="{d:DesignInstance Type=vm:SettingsViewModel, IsDesignTimeCreatable=False}"
+             d:DesignWidth="400" d:DesignHeight="500">
+    <ScrollViewer VerticalScrollBarVisibility="Auto">
+        <StackPanel Margin="16">
+            <TextBlock Text="Settings" FontWeight="Bold" FontSize="18" Margin="0,0,0,16"/>
+
+            <!-- Test Runner Path -->
+            <TextBlock Text="Test Runner Executable" FontWeight="SemiBold" Margin="0,0,0,4"/>
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                <TextBox Text="{Binding TestRunnerPath, UpdateSourceTrigger=PropertyChanged}"
+                         Grid.Column="0" Margin="0,0,4,0"/>
+                <Button Content="Browse" Command="{Binding BrowseTestRunnerCommand}"
+                        Grid.Column="1" Padding="8,4"/>
+            </Grid>
+
+            <!-- Reference Image Directory -->
+            <TextBlock Text="Reference Image Directory" FontWeight="SemiBold" Margin="0,16,0,4"/>
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                <TextBox Text="{Binding ReferenceImageDir, UpdateSourceTrigger=PropertyChanged}"
+                         Grid.Column="0" Margin="0,0,4,0"/>
+                <Button Content="Browse" Command="{Binding BrowseReferenceDirCommand}"
+                        Grid.Column="1" Padding="8,4"/>
+            </Grid>
+
+            <!-- Output Directory -->
+            <TextBlock Text="Output Directory" FontWeight="SemiBold" Margin="0,16,0,4"/>
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                <TextBox Text="{Binding OutputDir, UpdateSourceTrigger=PropertyChanged}"
+                         Grid.Column="0" Margin="0,0,4,0"/>
+                <Button Content="Browse" Command="{Binding BrowseOutputDirCommand}"
+                        Grid.Column="1" Padding="8,4"/>
+            </Grid>
+
+            <!-- Failure Threshold -->
+            <TextBlock Text="Failure Threshold" FontWeight="SemiBold" Margin="0,16,0,4"/>
+            <StackPanel Orientation="Horizontal">
+                <Slider Width="250" Minimum="0" Maximum="0.1" Value="{Binding FailureThreshold}"
+                        TickFrequency="0.001" IsSnapToTickEnabled="True"/>
+                <TextBlock Text="{Binding FailureThreshold, StringFormat={}{0:F3}}"
+                           Margin="8,0,0,0" VerticalAlignment="Center"/>
+            </StackPanel>
+
+            <!-- Theme -->
+            <TextBlock Text="Theme" FontWeight="SemiBold" Margin="0,16,0,4"/>
+            <ComboBox ItemsSource="{Binding AvailableThemes}"
+                      SelectedItem="{Binding SelectedTheme}"
+                      Width="200" HorizontalAlignment="Left"/>
+
+            <Separator Margin="0,24,0,16"/>
+
+            <!-- Action Buttons -->
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                <Button Content="Reset Defaults" Command="{Binding ResetDefaultsCommand}"
+                        Padding="12,6" Margin="0,0,8,0"/>
+                <Button Content="Save Settings" Command="{Binding SaveSettingsCommand}"
+                        Padding="12,6"/>
+            </StackPanel>
+        </StackPanel>
+    </ScrollViewer>
+</UserControl>

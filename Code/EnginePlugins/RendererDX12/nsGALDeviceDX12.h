@@ -7,6 +7,7 @@
 
 #include <wrl/client.h>
 #include <d3d12.h>
+#include <d3d12sdklayers.h>
 #include <dxgi1_6.h>
 #include <vector>
 #include <unordered_map>
@@ -77,6 +78,7 @@ public:
   // --- Debug ---
   void PushDebugGroup(const char* szName) override;
   void PopDebugGroup() override;
+  void ConsumeValidationMessages(std::vector<nsValidationMessage>& outMessages) override;
 
 private:
   static constexpr uint32_t FrameCount = 2;
@@ -84,6 +86,7 @@ private:
   // Core DX12 objects
   ComPtr<IDXGIFactory6> m_pFactory;
   ComPtr<ID3D12Device> m_pDevice;
+  ComPtr<ID3D12InfoQueue> m_pInfoQueue;
   ComPtr<ID3D12CommandQueue> m_pCommandQueue;
   ComPtr<ID3D12CommandAllocator> m_pCommandAllocators[FrameCount];
   ComPtr<ID3D12GraphicsCommandList> m_pCommandList;
@@ -93,6 +96,7 @@ private:
   uint64_t m_uiFenceValues[FrameCount] = {};
   HANDLE m_hFenceEvent = nullptr;
   uint32_t m_uiCurrentFrame = 0;
+  uint64_t m_uiConsumedInfoQueueMessages = 0;
 
   // Descriptor heaps
   ComPtr<ID3D12DescriptorHeap> m_pRTVHeap;

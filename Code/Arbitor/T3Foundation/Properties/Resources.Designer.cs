@@ -14,7 +14,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace Properties {
+namespace T3Foundation.Properties {
     using System;
     
     

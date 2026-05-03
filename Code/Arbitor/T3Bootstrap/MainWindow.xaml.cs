@@ -1,320 +1,157 @@
-using Syncfusion.SfSkinManager;
-using System;
-using System.Collections.ObjectModel;
-using System.ComponentModel;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
+/*
+ *   Copyright (c) 2023-present WD Studios L.L.C.
+ *   All rights reserved.
+ */
+
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Media;
-using T3Foundation;
-using T3Foundation.Models;
-using T3Foundation.Services;
+using System.Windows.Controls.Primitives;
+using System.Windows.Data;
+using CommunityToolkit.Mvvm.Input;
+using T3.ViewModels;
+using T3.Views.Panels;
+using T3Foundation.Services.DI;
+using T3Foundation.Services.Shell;
+using T3Foundation.Wpf.Panels;
+using T3Foundation.Wpf.Shell;
 
 namespace T3
 {
   /// <summary>
-  /// View model for test list items.
+  /// Mannequin main window. Inherits the chromed title bar, dockable layout,
+  /// data-driven menu/toolbar, command palette, and FrostEd x Unreal theme
+  /// from <see cref="T3ShellWindow"/>. Per-app concerns are limited to the
+  /// three Register* overrides below.
   /// </summary>
-  public class TestListItem : INotifyPropertyChanged
+  public partial class MainWindow : T3ShellWindow
   {
-    public string TestName { get; set; } = "";
-    public string API { get; set; } = "";
-    public bool Passed { get; set; }
-    public double MeanError { get; set; }
-    public string MeanErrorText => MeanError > 0 ? $"(err: {MeanError:F4})" : "";
-    public T3VisualTestResult? Result { get; set; }
-
-    public Brush StatusColor => Result == null ? Brushes.Gray :
-      (Result.Passed ? Brushes.LimeGreen :
-      (Result.RenderSucceeded ? Brushes.OrangeRed : Brushes.Red));
-
-    public event PropertyChangedEventHandler? PropertyChanged;
-    public void Refresh() => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(""));
-  }
-
-  /// <summary>
-  /// Interaction logic for MainWindow.xaml — Mannequin Visual Test Runner GUI
-  /// </summary>
-  public partial class MainWindow : Window
-  {
-    private readonly T3TestRunnerService _testRunner = new();
-    private readonly ObservableCollection<TestListItem> _testItems = new();
-    private readonly ObservableCollection<string> _logMessages = new();
-    private T3VisualTestSummary? _lastSummary;
-    private CancellationTokenSource? _cts;
-
     public MainWindow()
     {
-      // Theme initialization
-      string style = "basetheme";
-      SkinHelper? styleInstance = null;
-      var skinHelpterStr = "Syncfusion.Themes." + style + ".WPF." + style + "SkinHelper, Syncfusion.Themes." + style + ".WPF";
-      Type? skinHelpterType = Type.GetType(skinHelpterStr);
-      if (skinHelpterType != null)
-        styleInstance = Activator.CreateInstance(skinHelpterType) as SkinHelper;
-      if (styleInstance != null)
-        SfSkinManager.RegisterTheme("basetheme", styleInstance);
-      SfSkinManager.SetTheme(this, new Theme("basetheme;MaterialDark"));
-
       InitializeComponent();
-
-      // Bind collections
-      LB_TestList.ItemsSource = _testItems;
-      LB_Log.ItemsSource = _logMessages;
-
-      // Wire up framework logging to the UI log panel
-      T3Core.OnLogMessage += (msg, level) =>
-      {
-        Dispatcher.BeginInvoke(() =>
-        {
-          _logMessages.Add(msg);
-          LB_Log.ScrollIntoView(msg);
-        });
-      };
-
-      // Wire up test runner events
-      _testRunner.OnTestOutput += (output) =>
-      {
-        Dispatcher.BeginInvoke(() =>
-        {
-          _logMessages.Add(output);
-        });
-      };
-
-      _testRunner.OnTestRunComplete += (summary) =>
-      {
-        Dispatcher.BeginInvoke(() => UpdateSummary(summary));
-      };
-
-      // Initialize framework
-      T3Core.Initialize();
-      T3Core.Log("Mannequin Visual Graphics Test Runner ready.", T3LogLevel.Info);
-
-      // Default configuration
-      _testRunner.Configure(
-        testRunnerExe: "RendererTest.exe",
-        referenceDir: "Data/UnitTests/RendererTest/ReferenceImages",
-        outputDir: "TestOutput"
-      );
     }
 
-    // --- Toolbar Event Handlers ---
+    protected override string DefaultWorkspaceName => "Default";
 
-    private void OnFileClick(object sender, RoutedEventArgs e)
+    protected override void RegisterToolWindows(IT3ToolWindowRegistry registry)
     {
-      // File menu — load results, export, etc.
-      var dialog = new Microsoft.Win32.OpenFileDialog
+      registry.Register(new T3ToolWindowDescriptor("tests", "Tests", () => new TestListPanel())
       {
-        Filter = "JSON Results|*.json|All Files|*.*",
-        Title = "Load Test Results"
-      };
+        DefaultSide = T3DockSide.Left,
+        DefaultWidth = 300,
+        IconKey = T3Icons.Outliner,
+        MenuPath = "View/Tests"
+      });
 
-      if (dialog.ShowDialog() == true)
+      registry.Register(new T3ToolWindowDescriptor("comparison", "Image Comparison", () => new ImageComparisonPanel())
       {
-        var summary = T3VisualTestSummary.LoadFromJson(dialog.FileName);
-        if (summary != null)
-        {
-          UpdateSummary(summary);
-          T3Core.Log($"Loaded results from {dialog.FileName}", T3LogLevel.Info);
-        }
+        DefaultSide = T3DockSide.Document,
+        IconKey = T3Icons.Viewport
+      });
+
+      registry.Register(new T3ToolWindowDescriptor("details", "Test Details", () => new TestDetailsPanel())
+      {
+        DefaultSide = T3DockSide.Right,
+        DefaultWidth = 280,
+        IconKey = T3Icons.Details,
+        MenuPath = "View/Test Details"
+      });
+
+      registry.Register(new T3ToolWindowDescriptor("resources", "Resource Inspector", () => new ResourceInspectorPanel())
+      {
+        DefaultSide = T3DockSide.Tabbed,
+        TabbedWith = "details",
+        IconKey = T3Icons.Bug,
+        MenuPath = "View/Resource Inspector"
+      });
+
+      registry.Register(new T3ToolWindowDescriptor("summary", "Summary", () => new SummaryPanel())
+      {
+        DefaultSide = T3DockSide.Tabbed,
+        TabbedWith = "t3.log",
+        IconKey = T3Icons.Info,
+        MenuPath = "View/Summary"
+      });
+
+      // Open the default workspace panels (Mannequin's golden-path layout).
+      foreach (var id in new[] { "tests", "comparison", "details", "resources", "t3.log", "summary" })
+        registry.Open(id);
+    }
+
+    protected override void RegisterToolbar(IT3ToolbarService toolbar)
+    {
+      var vm = T3ServiceCollection.Resolve<MainViewModel>();
+
+      toolbar.AddButton("Load Results", vm.LoadResultsFileCommand, T3Icons.Open, "Load a saved results file");
+      toolbar.AddButton("Run All", vm.RunAllTestsCommand, T3Icons.Play, "Run every discovered test");
+      toolbar.AddButton("Run Checked", vm.RunSelectedTestsCommand, T3Icons.Check, "Run only the checked tests");
+      toolbar.AddButton("Stop", vm.StopTestsCommand, T3Icons.Stop, "Cancel the running test pass");
+      toolbar.AddSeparator();
+
+      toolbar.AddLabel("Application");
+      toolbar.AddCustom(BuildBoundComboBox(
+        vm,
+        nameof(MainViewModel.AvailableApplications),
+        nameof(MainViewModel.SelectedApplication),
+        width: 240,
+        displayMemberPath: "DisplayName"));
+      toolbar.AddButton("Browse...", vm.BrowseApplicationCommand, T3Icons.Search, "Pick a different application binary");
+      toolbar.AddButton("Refresh Tests", vm.RefreshTestsCommand, T3Icons.Refresh, "Re-discover the tests on disk");
+      toolbar.AddSeparator();
+
+      toolbar.AddButton("Update Baselines", vm.UpdateBaselinesCommand, T3Icons.Save, "Promote the current outputs to references");
+      toolbar.AddSeparator();
+
+      toolbar.AddLabel("API");
+      toolbar.AddCustom(BuildBoundComboBox(
+        vm,
+        nameof(MainViewModel.AvailableAPIs),
+        nameof(MainViewModel.SelectedAPI),
+        width: 120));
+      toolbar.AddSeparator();
+
+      toolbar.AddButton("Export", vm.ExportResultsCommand, T3Icons.Save, "Export the current results");
+    }
+
+    /// <summary>
+    /// Builds a ComboBox bound to a source's items + selection. Used for the
+    /// Application and API toolbar dropdowns - data-driven toolbar items can be
+    /// arbitrary controls via <c>AddCustom</c>.
+    /// </summary>
+    private static ComboBox BuildBoundComboBox(object source, string itemsPath, string selectedPath, double width, string displayMemberPath = null)
+    {
+      var combo = new ComboBox { Width = width, MinHeight = 28 };
+      if (displayMemberPath != null) combo.DisplayMemberPath = displayMemberPath;
+      combo.SetBinding(ItemsControl.ItemsSourceProperty, new Binding(itemsPath) { Source = source });
+      combo.SetBinding(Selector.SelectedItemProperty, new Binding(selectedPath) { Source = source, Mode = BindingMode.TwoWay });
+      return combo;
+    }
+
+    protected override void RegisterMenu(IT3MenuService menu)
+    {
+      var vm = T3ServiceCollection.Resolve<MainViewModel>();
+
+      menu.AddMenu("File")
+        .AddItem("Load Results...", vm.LoadResultsFileCommand, iconKey: T3Icons.Open)
+        .AddItem("Export...", vm.ExportResultsCommand, iconKey: T3Icons.Save)
+        .AddSeparator()
+        .AddItem("Exit", new RelayCommand(() => Application.Current.Shutdown()), iconKey: T3Icons.Times);
+
+      menu.AddMenu("Run")
+        .AddItem("Run All", vm.RunAllTestsCommand, iconKey: T3Icons.Play)
+        .AddItem("Run Checked", vm.RunSelectedTestsCommand, iconKey: T3Icons.Check)
+        .AddItem("Stop", vm.StopTestsCommand, iconKey: T3Icons.Stop)
+        .AddSeparator()
+        .AddItem("Refresh Tests", vm.RefreshTestsCommand, iconKey: T3Icons.Refresh)
+        .AddItem("Update Baselines", vm.UpdateBaselinesCommand, iconKey: T3Icons.Save);
+
+      // View menu - one entry per registered tool window.
+      var registry = T3ServiceCollection.Resolve<IT3ToolWindowRegistry>();
+      var view = menu.AddMenu("View");
+      foreach (var desc in registry.All)
+      {
+        var captured = desc;
+        view.AddItem(captured.Title, new RelayCommand(() => registry.Toggle(captured.Id)), iconKey: captured.IconKey);
       }
-    }
-
-    private async void OnRunTestsClick(object sender, RoutedEventArgs e)
-    {
-      await RunTests(filter: null);
-    }
-
-    private async void OnRunSelectedClick(object sender, RoutedEventArgs e)
-    {
-      var selected = LB_TestList.SelectedItems;
-      if (selected.Count == 0)
-      {
-        T3Core.Log("No tests selected.", T3LogLevel.Warning);
-        return;
-      }
-
-      var names = selected.Cast<TestListItem>().Select(t => t.TestName);
-      await RunTests(filter: string.Join(",", names));
-    }
-
-    private void OnStopTestsClick(object sender, RoutedEventArgs e)
-    {
-      _cts?.Cancel();
-      _testRunner.AbortTests();
-      SetRunningState(false);
-    }
-
-    private async void OnUpdateBaselinesClick(object sender, RoutedEventArgs e)
-    {
-      var result = MessageBox.Show(
-        "This will update reference images from the latest test output.\nAre you sure?",
-        "Update Baselines", MessageBoxButton.YesNo, MessageBoxImage.Question);
-
-      if (result == MessageBoxResult.Yes)
-      {
-        string api = GetSelectedAPI();
-        _cts = new CancellationTokenSource();
-        SetRunningState(true);
-        await _testRunner.RunTestsAsync(new[] { api }, updateBaselines: true, cancellationToken: _cts.Token);
-        SetRunningState(false);
-        T3Core.Log("Baselines updated.", T3LogLevel.Info);
-      }
-    }
-
-    private void OnSettingsClick(object sender, RoutedEventArgs e)
-    {
-      T3Core.Log("Settings panel — configure test runner paths, thresholds, and comparison settings.", T3LogLevel.Info);
-    }
-
-    private void OnAPISelectionChanged(object sender, SelectionChangedEventArgs e)
-    {
-      string api = GetSelectedAPI();
-      if (TB_StatusBarAPI != null)
-        TB_StatusBarAPI.Text = $"API: {api}";
-    }
-
-    // --- Test List ---
-
-    private void OnTestFilterChanged(object sender, TextChangedEventArgs e)
-    {
-      string filter = TB_TestFilter.Text.ToLowerInvariant();
-      if (_lastSummary == null)
-        return;
-
-      _testItems.Clear();
-      foreach (var r in _lastSummary.Results)
-      {
-        if (string.IsNullOrEmpty(filter) || r.TestName.ToLowerInvariant().Contains(filter))
-        {
-          _testItems.Add(new TestListItem
-          {
-            TestName = r.TestName,
-            API = r.API,
-            Passed = r.Passed,
-            MeanError = r.MeanError,
-            Result = r
-          });
-        }
-      }
-    }
-
-    private void OnTestSelectionChanged(object sender, SelectionChangedEventArgs e)
-    {
-      if (LB_TestList.SelectedItem is TestListItem item && item.Result != null)
-      {
-        ShowTestDetails(item.Result);
-      }
-    }
-
-    // --- View Mode ---
-
-    private void OnViewModeChanged(object sender, RoutedEventArgs e)
-    {
-      // Toggle between side-by-side, overlay, and diff-only view modes
-    }
-
-    private void OnClearLogClick(object sender, RoutedEventArgs e)
-    {
-      _logMessages.Clear();
-    }
-
-    // --- Core Logic ---
-
-    private async Task RunTests(string? filter)
-    {
-      string api = GetSelectedAPI();
-      var apis = api == "All APIs"
-        ? new[] { "DX12", "Vulkan", "DX11" }
-        : new[] { api };
-
-      _cts = new CancellationTokenSource();
-      SetRunningState(true);
-      TB_StatusBar.Text = "Running tests...";
-
-      var summary = await _testRunner.RunTestsAsync(apis, filter, cancellationToken: _cts.Token);
-
-      SetRunningState(false);
-
-      if (summary != null)
-      {
-        UpdateSummary(summary);
-        TB_StatusBar.Text = summary.FailedCount == 0
-          ? $"All {summary.PassedCount} tests passed!"
-          : $"{summary.FailedCount} test(s) failed.";
-      }
-      else
-      {
-        TB_StatusBar.Text = "Test run completed with errors.";
-      }
-    }
-
-    private void UpdateSummary(T3VisualTestSummary summary)
-    {
-      _lastSummary = summary;
-
-      // Update summary panel
-      TB_TotalTests.Text = summary.TotalTests.ToString();
-      TB_PassedTests.Text = summary.PassedCount.ToString();
-      TB_FailedTests.Text = summary.FailedCount.ToString();
-      TB_SkippedTests.Text = summary.SkippedCount.ToString();
-      TB_NewBaselines.Text = summary.NewBaselines.ToString();
-      TB_TotalTime.Text = $"{summary.TotalTimeMs:F0} ms";
-      PB_TestProgress.Value = 100;
-
-      // Populate test list
-      _testItems.Clear();
-      foreach (var r in summary.Results)
-      {
-        _testItems.Add(new TestListItem
-        {
-          TestName = r.TestName,
-          API = r.API,
-          Passed = r.Passed,
-          MeanError = r.MeanError,
-          Result = r
-        });
-      }
-    }
-
-    private void ShowTestDetails(T3VisualTestResult result)
-    {
-      // Update properties panel
-      TB_TestName.Text = result.TestName;
-      TB_Status.Text = result.StatusText;
-      TB_Status.Foreground = result.Passed ? Brushes.LimeGreen : Brushes.OrangeRed;
-      TB_API.Text = result.API;
-      TB_RenderTime.Text = $"{result.RenderTimeMs:F1} ms";
-      TB_MeanError.Text = $"{result.MeanError:F6}";
-      TB_MaxError.Text = $"{result.MaxError:F6}";
-      TB_MedianError.Text = $"{result.MedianError:F6}";
-      TB_P95.Text = $"{result.P95Error:F6}";
-      TB_PixelsFailed.Text = $"{result.PixelsFailed} / {result.TotalPixels}";
-      TB_FailurePercent.Text = $"{result.FailurePercentage:F2}%";
-      TB_ErrorMsg.Text = result.ErrorMessage ?? "";
-
-      // Load comparison images
-      var (testPath, refPath, diffPath) = _testRunner.GetComparisonImages(result.API, result.TestName);
-      IMG_TestOutput.Source = T3ImageService.LoadImage(testPath ?? "");
-      IMG_Reference.Source = T3ImageService.LoadImage(refPath ?? "");
-      IMG_Diff.Source = T3ImageService.LoadImage(diffPath ?? "");
-    }
-
-    private void SetRunningState(bool running)
-    {
-      B_RunTests.IsEnabled = !running;
-      B_RunSelected.IsEnabled = !running;
-      B_StopTests.IsEnabled = running;
-      B_UpdateBaselines.IsEnabled = !running;
-    }
-
-    private string GetSelectedAPI()
-    {
-      if (CB_GraphicsAPI.SelectedItem is ComboBoxItem item)
-        return item.Content?.ToString() ?? "DX12";
-      return "DX12";
     }
   }
 }

@@ -4,62 +4,60 @@
  *   You are only allowed access to this code, if given WRITTEN permission by Watch Dogs LLC.
  */
 
+#nullable enable
+
 using System;
-using System.Collections.Generic;
-using System.ComponentModel.Composition;
-using System.ComponentModel.Composition.Hosting;
-using System.Configuration;
-using System.IO;
-using System.Linq;
-using System.Windows.Controls;
-namespace T3Foundation
+using Microsoft.Extensions.DependencyInjection;
+
+namespace T3Foundation.Plugin
 {
   /// <summary>
-  /// Interface to serve as the base for UserControls to use for plugging into any T3 Application.
-  /// See: https://www.c-sharpcorner.com/article/plugin-architecture-using-mef-framework/ for concept inspiration. 
+  /// Modern plugin interface for T3 applications.
+  /// Plugins register their services into DI and have a defined lifecycle.
   /// </summary>
   public interface IT3Plugin
   {
     /// <summary>
-    /// Name of the plugin. This will display on the T3 Application. the end-application can change this behavior if it wishes.
+    /// Unique identifier for this plugin.
     /// </summary>
-    string PluginName { get; set; }
+    string PluginId { get; }
 
     /// <summary>
-    /// Get the user control of the loaded plugin.
+    /// Human-readable display name.
     /// </summary>
-    /// <returns>The UserControl object.</returns>
-    UserControl GetPluginControl();
+    string PluginName { get; }
+
+    /// <summary>
+    /// Plugin version string (e.g. "1.0.0").
+    /// </summary>
+    string Version { get; }
+
+    /// <summary>
+    /// Short description of the plugin's purpose.
+    /// </summary>
+    string Description { get; }
+
+    /// <summary>
+    /// Called during application startup to register the plugin's services into the DI container.
+    /// </summary>
+    void RegisterServices(IServiceCollection services);
+
+    /// <summary>
+    /// Called after the DI container is built. Use for post-initialization that requires resolved services.
+    /// </summary>
+    void Initialize(IServiceProvider provider);
+
+    /// <summary>
+    /// Called during application shutdown for graceful cleanup.
+    /// </summary>
+    void Shutdown();
   }
 
   /// <summary>
-  /// struct for holding needed objects to allow T3 Plugins to work with T3 Applications.
-  /// Any T3 Application REQUIRES this to be created within the MainWindow Class.
+  /// Marks a class as a T3 plugin for automatic assembly scanning discovery.
   /// </summary>
-  public struct ST3PluginAppObjects
+  [AttributeUsage(AttributeTargets.Class, AllowMultiple = false, Inherited = false)]
+  public class T3PluginAttribute : Attribute
   {
-    public CompositionContainer _container;
-
-    [ImportMany(typeof(IT3Plugin))]
-    public IEnumerable<Lazy<IT3Plugin>> _pluggers;
-  }
-
-  public static class CT3PluginUtils
-  {
-    /// <summary>
-    /// Loads the plugin view from said Plugin DLL using MEF.
-    /// This doesn't actually load the UI that is viewable to the user, you must load that your self.
-    /// </summary>
-    /// NOTE: Revamp this class, it is not clear.
-    [Obsolete]
-    public static void LoadPluginView(ST3PluginAppObjects appobj)
-    {
-      string plugName = ConfigurationSettings.AppSettings["Plugin"].ToString();
-      var connectors = Directory.GetDirectories(plugName);
-      var catalog = new AggregateCatalog();
-      connectors.ToList().ForEach(connect => catalog.Catalogs.Add(new DirectoryCatalog(connect)));
-      appobj._container = new CompositionContainer(catalog);
-      appobj._container.ComposeParts(appobj._container);
-    }
   }
 }

@@ -4,6 +4,11 @@ ns_cmake_init()
 get_filename_component(PROJECT_NAME ${CMAKE_CURRENT_SOURCE_DIR} NAME_WE)
 
 ns_create_target_cs(APPLICATION ${PROJECT_NAME})
+target_sources(${PROJECT_NAME} PRIVATE
+	App.config
+	Services/T3ApiDiagnosticsService.cs
+	ViewModels/ApiCallCheckViewModel.cs
+	ViewModels/ResourceSnapshotViewModel.cs)
 
 get_cmake_property(BASETHEME ArbitorThemeBase)
 
@@ -21,7 +26,19 @@ csharp_set_xaml_cs_properties(
 	App.xaml
 	App.xaml.cs
 	MainWindow.xaml
-	MainWindow.xaml.cs)
+	MainWindow.xaml.cs
+	Views/SettingsPanel.xaml
+	Views/SettingsPanel.xaml.cs
+	Views/Panels/TestListPanel.xaml
+	Views/Panels/TestListPanel.xaml.cs
+	Views/Panels/ImageComparisonPanel.xaml
+	Views/Panels/ImageComparisonPanel.xaml.cs
+	Views/Panels/TestDetailsPanel.xaml
+	Views/Panels/TestDetailsPanel.xaml.cs
+	Views/Panels/ResourceInspectorPanel.xaml
+	Views/Panels/ResourceInspectorPanel.xaml.cs
+	Views/Panels/SummaryPanel.xaml
+	Views/Panels/SummaryPanel.xaml.cs)
 
 set_property(SOURCE App.xaml PROPERTY VS_XAML_TYPE "ApplicationDefinition")
 
@@ -52,6 +69,20 @@ set_property(TARGET ${PROJECT_NAME} PROPERTY VS_DOTNET_REFERENCES
 	"System.Xml.Linq"
 	"System.Drawing"
 	"System.Windows.Forms"
-	"System.ComponentModel.Composition"
-	"System.ComponentModel.Composition.Hosting"
+	"${CMAKE_CURRENT_BINARY_DIR}/packages/FontAwesome5.2.1.11/lib/net462/FontAwesome5.dll"
+	"${CMAKE_CURRENT_BINARY_DIR}/packages/CommunityToolkit.Mvvm.8.2.2/lib/netstandard2.0/CommunityToolkit.Mvvm.dll"
+	"${CMAKE_CURRENT_BINARY_DIR}/packages/Microsoft.Extensions.DependencyInjection.8.0.0/lib/net462/Microsoft.Extensions.DependencyInjection.dll"
+	"${CMAKE_CURRENT_BINARY_DIR}/packages/Microsoft.Extensions.DependencyInjection.Abstractions.8.0.0/lib/net462/Microsoft.Extensions.DependencyInjection.Abstractions.dll"
+	"${CMAKE_CURRENT_BINARY_DIR}/packages/Microsoft.Bcl.AsyncInterfaces.8.0.0/lib/net462/Microsoft.Bcl.AsyncInterfaces.dll"
+	"${CMAKE_CURRENT_BINARY_DIR}/packages/System.Runtime.CompilerServices.Unsafe.6.0.0/lib/net461/System.Runtime.CompilerServices.Unsafe.dll"
+	"${CMAKE_CURRENT_BINARY_DIR}/packages/System.Threading.Tasks.Extensions.4.5.4/lib/net461/System.Threading.Tasks.Extensions.dll"
+	"${CMAKE_CURRENT_BINARY_DIR}/packages/Newtonsoft.Json.13.0.3/lib/net45/Newtonsoft.Json.dll"
 	"WindowsBase")
+
+ns_nuget_init()
+
+add_custom_command(TARGET ${PROJECT_NAME}
+	PRE_BUILD
+	COMMAND ${NUGET} restore ${CMAKE_CURRENT_SOURCE_DIR}/packages.config -PackagesDirectory ${CMAKE_CURRENT_BINARY_DIR}/packages
+	WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
+)

@@ -1,9 +1,12 @@
-﻿<Application x:Class="T3.App"
-             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:local="clr-namespace:T3"
-             StartupUri="MainWindow.xaml">
+<t3f:T3WpfApplication x:Class="T3.App"
+       xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+       xmlns:t3f="clr-namespace:T3Foundation.Application;assembly=T3Foundation">
     <Application.Resources>
-         
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/T3Foundation;component/Wpf/T3Resources.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
     </Application.Resources>
-</Application>
+</t3f:T3WpfApplication>

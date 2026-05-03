@@ -1,0 +1,8 @@
+Mannequin Visual Test Report: BasicTriangle
+============================================
+Result:          PASSED
+Mean Error:      0.000000 (threshold: 0.050000)
+Max Error:       0.000000
+Median Error:    0.000000
+95th Percentile: 0.000000
+Pixels Failed:   0 / 262144 (0.00%)
